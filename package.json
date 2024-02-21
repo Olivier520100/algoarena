@@ -37,5 +37,8 @@
 		"vitest": "^0.25.8",
 		"web-vitals": "^3.5.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@auth0/auth0-spa-js": "^2.1.3"
+	}
 }
