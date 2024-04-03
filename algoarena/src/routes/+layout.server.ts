@@ -1,22 +1,25 @@
+import { redirect } from '@sveltejs/kit';
 import { getXataClient } from '../xata';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({locals}) => {
 
 
-	const user = await locals.auth();
-	console.log(user);
+	const session = await locals.auth();
+	console.log(session);
+	
+	
 
    
 			
 	
 	
 	return {
-        user,
-		loggedIn: !!user,
-		email: user?.user?.email,
-		avatar: user?.user?.image,
-		name: user?.user?.name,
+        user: session,
+		loggedIn: !!session,
+		email: session?.user?.email,
+		avatar: session?.user?.image,
+		name: session?.user?.name,
         
 	};
 };

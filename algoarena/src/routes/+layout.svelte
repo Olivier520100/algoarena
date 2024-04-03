@@ -16,10 +16,11 @@
 
 <div class="flex justify-between rounded-2xl border-2 main px-4 py-2">
 	<a class="flex items-center gap-2" href="/">
-		<h1 class="h1 mt-4">Circuit Clash</h1>
+		<h1 class="h1 mt-4">AlgoArena</h1>
 	</a>
 
 	<div class="flex items-center gap-4">
+		<a class="btn" href="/rankings"> Rankings </a>
 
 		{#if data.user}
 			<button class="btn btn-flat h-10 w-10 p-0" use:popup={popupSettings}>

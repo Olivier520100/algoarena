@@ -4,6 +4,10 @@ import { redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	let session = await locals.auth();
+	if (session?.user?.email){
+		 redirect(302, '/dashboard');
+	}
+	
 	
 
 	// Check if the user already exists in the database
@@ -17,7 +21,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!existingUser) {
 		await getXataClient().db.Users.create({
 			name: session?.user?.name?? "",
-			email: session?.user?.email
+			email: session?.user?.email,
+			elo: 700
 		});
 	}
 
