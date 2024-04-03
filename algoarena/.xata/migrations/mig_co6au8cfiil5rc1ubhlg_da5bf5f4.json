@@ -1,0 +1,16 @@
+{
+  "id": "mig_co6au8cfiil5rc1ubhlg",
+  "parentID": "mig_co6au3epe2mbada2v3h0",
+  "checksum": "1:da5bf5f4cb2179b027fd3dcb3e5277bab6e5baf4472bbee4fda1a56a748421df",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "elo",
+          "type": "int"
+        },
+        "table": "Users"
+      }
+    }
+  ]
+}

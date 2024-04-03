@@ -1,0 +1,17 @@
+{
+  "id": "mig_co6ashsfiil5rc1ubhkg",
+  "parentID": "mig_co6arikfiil5rc1ubhjg",
+  "checksum": "1:6c6e22c021ecc71e6f7135aec7baf4719b012132e92a626524a8253e869e7a19",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "email",
+          "type": "email",
+          "unique": true
+        },
+        "table": "Users"
+      }
+    }
+  ]
+}

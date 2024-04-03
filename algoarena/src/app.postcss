@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+@layer base {
+    :root {
+        @apply bg-pale font-sans text-foreground;
+    }
+
+    .h1 {
+        @apply mb-4 text-2xl font-bold;
+    }
+
+    .h2 {
+        @apply mb-2 text-lg font-bold;
+    }
+
+    .border-cool {
+        @apply border-2 border-dark shadow-square;
+    }
+
+    .card {
+        @apply flex flex-col items-start justify-center;
+        @apply border-cool rounded bg-muted;
+    }
+
+    .btn {
+        @apply relative flex items-center justify-center gap-2;
+        @apply z-10 mb-1 h-10 w-64 rounded px-2;
+        @apply border-cool cursor-pointer bg-white;
+        @apply font-semibold transition-all duration-300;
+        @apply hover:text-pale disabled:pointer-events-none disabled:bg-pale disabled:opacity-90;
+
+        &::before {
+            @apply absolute inset-0 -z-10 w-0 bg-dark transition-[width] content-[""];
+            @apply hover:w-full;
+        }
+
+        &.btn-sm {
+            @apply h-8 w-auto text-sm;
+        }
+
+        &.btn-flat {
+            @apply mb-0 shadow-none transition-shadow before:content-none;
+            @apply hover:text-dark hover:shadow-square;
+        }
+
+        &.btn-destructive {
+            @apply border-destructive before:bg-destructive;
+            @apply hover:text-dark;
+        }
+    }
+
+    .hr {
+        @apply h-0.5 rounded bg-dark;
+    }
+
+    .label {
+        @apply grid gap-1;
+    }
+
+    .input {
+        @apply border-cool h-10 w-80 rounded bg-background;
+    }
+
+    .popup {
+        @apply absolute left-0 right-0 w-max;
+        @apply isolate -z-[9000] opacity-0;
+    }
+
+    .popup-arrow {
+        @apply absolute -z-10 rotate-45;
+        @apply h-3 w-3 rounded-sm bg-dark;
+    }
+}
