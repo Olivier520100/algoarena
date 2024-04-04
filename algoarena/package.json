@@ -31,6 +31,7 @@
 		"@auth/sveltekit": "^0.14.2",
 		"@floating-ui/dom": "^1.6.3",
 		"@tabler/icons-svelte": "^3.1.0",
-		"@xata.io/client": "^0.29.3"
+		"@xata.io/client": "^0.29.3",
+		"zod": "^3.22.4"
 	}
 }

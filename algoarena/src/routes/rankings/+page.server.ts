@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ locals,depends }) => {
 
 	// Function to fetch users at intervals
 	const users=await getXataClient().db.Users.sort('elo').getAll();
-	users.reverse()
+	users.reverse();
 
 	
 
