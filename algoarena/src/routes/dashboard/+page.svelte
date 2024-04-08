@@ -12,10 +12,4 @@
 
 
 
-
-
-
-
-<style>
-	
-</style>
+<h1 class="h1">You are connected</h1>
