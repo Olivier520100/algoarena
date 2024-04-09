@@ -1,18 +1,12 @@
 <script lang="ts">
 	
 	import { onMount } from 'svelte';
+	import type { AnyZodTuple } from 'zod';
     let value="File Input";
-
-    async function print(txt:string){
-        console.log(txt)
-    } 
-    
+    let file: File;
 
 </script>
 
-<main class="overflow-hidden ">
-
-    <div class="triangle-background">
-    </div>
+<main class="triangle-background">
 
 </main>

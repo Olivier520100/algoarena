@@ -1,11 +1,7 @@
 import { GOOGLE_CLOUD_CREDENTIALS } from "$env/static/private";
 import { Storage } from "@google-cloud/storage";
 
-type BucketName =
-    | "commupartage_object_images"
-    | "commupartage_user_images"
-    | "commupartage_transaction_end_image"
-    | "commupartage_transaction_start_images";
+type BucketName = "user_ai_files";
 
 const storage = new Storage({
     credentials: JSON.parse(GOOGLE_CLOUD_CREDENTIALS),
@@ -21,7 +17,6 @@ export async function generateV4UploadSignedUrl(bucket: BucketName, filename: st
             expires: Date.now() + 15 * 60 * 1000, // 15 minutes
             contentType: "application/octet-stream",
         });
-
     return { url, filename };
 }
 
