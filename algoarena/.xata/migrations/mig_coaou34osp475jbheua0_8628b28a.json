@@ -1,0 +1,16 @@
+{
+  "id": "mig_coaou34osp475jbheua0",
+  "parentID": "mig_coaotvo8qt0jm63n86u0",
+  "checksum": "1:8628b28afc096b4bd5d59b65d52e6560e3c5505330e7352ef788bbccba5b027d",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "file",
+          "type": "file"
+        },
+        "table": "Users"
+      }
+    }
+  ]
+}

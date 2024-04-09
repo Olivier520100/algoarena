@@ -1,0 +1,16 @@
+{
+  "id": "mig_coa7m93pa7504nlt1ehg",
+  "parentID": "mig_coa7lv3pa7504nlt1egg",
+  "checksum": "1:94a695f7526376d98d6634a1f0fcc8cd2a8a4033b37a9a07e65a24da7cd16f27",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "MatchJson",
+          "type": "json"
+        },
+        "table": "Users"
+      }
+    }
+  ]
+}

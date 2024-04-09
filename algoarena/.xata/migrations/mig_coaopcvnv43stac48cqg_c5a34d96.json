@@ -1,0 +1,14 @@
+{
+  "id": "mig_coaopcvnv43stac48cqg",
+  "parentID": "mig_coaop94osp475jbheu90",
+  "checksum": "1:c5a34d9651f53f868c9639a8ba972d8388eb1e9f2c7b7ba8b40bf653a2ae5108",
+  "operations": [
+    {
+      "renameColumn": {
+        "newName": "files",
+        "oldName": "file",
+        "table": "Users"
+      }
+    }
+  ]
+}
