@@ -3,9 +3,7 @@
 </script>
 
 <main>
-
-
-    <div>
-        <SignIn provider="github">SignIn</SignIn>
+    <div class="overflow-hidden">
+        <SignIn provider="">SignIn</SignIn>
     </div>
 </main>

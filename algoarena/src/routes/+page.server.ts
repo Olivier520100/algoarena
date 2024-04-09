@@ -8,8 +8,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 		 redirect(302, '/dashboard');
 	}
 	
-	
-
 	// Check if the user already exists in the database
 	const existingUser = await getXataClient()
 		.db.Users.filter({

@@ -7,19 +7,22 @@ export const load: LayoutServerLoad = async ({locals}) => {
 
 	const session = await locals.auth();
 	console.log(session);
-	
-	
 
-   
-			
+
+	const existingUser = await getXataClient()
+	.db.Users.filter({
+		email: session?.user?.email
+	})
+	.getFirst(); // Use getFirst() to attempt to fetch a single user record
 	
 	
 	return {
-        user: session,
+		user: session,
 		loggedIn: !!session,
 		email: session?.user?.email,
 		avatar: session?.user?.image,
 		name: session?.user?.name,
-        
+		elo: existingUser?.elo
 	};
 };
+

@@ -5,11 +5,14 @@
 
     async function print(txt:string){
         console.log(txt)
-    }
+    } 
     
 
 </script>
 
+<main class="overflow-hidden ">
 
+    <div class="triangle-background">
+    </div>
 
-<h1 class="h1">You are connected</h1>
+</main>
