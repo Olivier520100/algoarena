@@ -13,8 +13,12 @@ const tables = [
       { name: "email", type: "email", unique: true },
       { name: "name", type: "string", notNull: true, defaultValue: "" },
       { name: "elo", type: "int" },
+      { name: "MatchJson", type: "json" },
+      { name: "Stats", type: "json" },
+      { name: "file", type: "file" },
     ],
   },
+  { name: "Matches", columns: [] },
 ] as const;
 
 export type SchemaTables = typeof tables;
@@ -23,8 +27,12 @@ export type InferredTypes = SchemaInference<SchemaTables>;
 export type Users = InferredTypes["Users"];
 export type UsersRecord = Users & XataRecord;
 
+export type Matches = InferredTypes["Matches"];
+export type MatchesRecord = Matches & XataRecord;
+
 export type DatabaseSchema = {
   Users: UsersRecord;
+  Matches: MatchesRecord;
 };
 
 const DatabaseClient = buildClient();
@@ -40,6 +48,7 @@ export class XataClient extends DatabaseClient<DatabaseSchema> {
 }
 
 let instance: XataClient | undefined = undefined;
+
 
 import { XATA_API_KEY, XATA_BRANCH, XATA_DATABASE_URL } from '$env/static/private';
 

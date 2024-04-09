@@ -1,0 +1,16 @@
+{
+  "id": "mig_coa7me3pa7504nlt1eig",
+  "parentID": "mig_coa7m93pa7504nlt1ehg",
+  "checksum": "1:bc0542cd1b1efd65f66934dabb77b73b13f88f19d24be91d7e144bc72399c5e5",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "Stats",
+          "type": "json"
+        },
+        "table": "Users"
+      }
+    }
+  ]
+}
