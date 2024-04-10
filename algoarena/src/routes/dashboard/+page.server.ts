@@ -13,7 +13,10 @@ export const load: PageServerLoad = async ({ locals, depends }) => {
 		redirect(302, '/');
 	}
 
-	const users = await getXataClient().db.Users.select(["id","elo","email","name"]).sort('elo').getAll();
+	const users = await getXataClient()
+		.db.Users.select(['id', 'elo', 'email', 'name'])
+		.sort('elo')
+		.getAll();
 	users.reverse();
 
 	// Return the initial list of users
@@ -34,8 +37,7 @@ export const actions = {
 		}
 		const file = form.data.pyFile;
 
-
-		form.data.pyFile=undefined;
+		form.data.pyFile = undefined;
 
 		const user = await getXataClient()
 			.db.Users.filter({
@@ -50,6 +52,8 @@ export const actions = {
 			{ table: 'Users', column: 'file', record: user.id },
 			await file.arrayBuffer()
 		);
+
+		console.log(file);
 
 		return { form };
 	}
