@@ -13,6 +13,7 @@ import numpy as np
 
 import sys
 
+
 def showMap(terrainMap,go=None):
         
     if terrainMap.dtype == np.float64:
@@ -41,7 +42,7 @@ def showMap(terrainMap,go=None):
             1: np.array([0, 0, 255]),        # water
             2: np.array([255, 255, 0]),      # sand
             3: np.array([0, 255, 0]),        # grass1
-            4: np.array([0, 200, 0]),        # grass2
+            4: np.array([0, 255, 0]),        # grass2
             5: np.array([128, 128, 128]),    # stone1
             6: np.array([160, 160, 160]),    # stone2
             7: np.array([180, 180, 180]),    # stone3
@@ -122,14 +123,23 @@ class Game():
         self.team2 = Team(self.team2startcoordsx,self.team2startcoordsy,self.terrainMap)
         self.trees = []
         self.goList = []
+
         self.walkableMapCreation()
         self.waterMapCreation()
         self.mineableMapCreation()
-        self.accesibleMapCreation(self.team1.buildings+self.team1.units+self.team2.buildings+self.team2.units)
+        self.goList = self.team1.buildings+self.team1.units+self.team2.buildings+self.team2.units+self.trees
         self.treeGeneration()
+        self.goList = self.team1.buildings+self.team1.units+self.team2.buildings+self.team2.units+self.trees
+
+        self.accesibleMapCreation()
+        self.unitDisplay()
+        showMap(self.unitMap)
+
+
     def gametick(self):
 
         self.goList = self.team1.buildings+self.team1.units+self.team2.buildings+self.team2.units+self.trees
+
 
     def showMap(self,mapIn):
         showMap(mapIn)
@@ -140,31 +150,49 @@ class Game():
     def mineableMapCreation(self):
         self.rockTerrain = (self.terrainMap == 5) | (self.terrainMap == 6) | (self.terrainMap == 7) | (self.terrainMap == 8)
 
-    def accesibleMapCreation(self,objlist):
+    def accesibleMapCreation(self):
 
-        self.unitmap = np.zeros([self.mapsizey, self.mapsizex]) == 0
+        self.unitTruth = np.zeros([self.mapsizey, self.mapsizex]) == 0
 
-        for go in objlist:
+        for go in self.goList:
             if issubclass(go.__class__,Building):
                 coordinates = coordinatesRange(go.rad) + np.array([go.x,go.y])
                 for coordinate in coordinates:
                     if 0 <= coordinate[1] and coordinate[1] < self.mapsizey and 0 <= coordinate[0] and coordinate[0] < self.mapsizex:
-                        self.unitmap[int(coordinate[1]),int(coordinate[0])] = False
+                        self.unitTruth[int(coordinate[1]),int(coordinate[0])] = False
             else: 
-                self.unitmap[go.y,go.x] = False
+                self.unitTruth[go.y,go.x] = False
 
-        self.accesibleTiles = np.logical_and(self.unitmap,self.accesibleMapCreation)
+        self.accesibleTiles = np.logical_and(self.unitTruth,self.walkableTerrain)
+
 
     def treeGeneration(self):
 
         grassArea = (self.terrainMap == 3) | (self.terrainMap == 4)
 
-        plantableArea = np.logical_and(grassArea,self.accesibleTiles)
+        unitTruth = np.zeros([self.mapsizey, self.mapsizex]) == 0
+
+
+        for go in self.goList:
+            if issubclass(go.__class__,Building):
+                coordinates = coordinatesRange(go.sumrad) + np.array([go.x,go.y])
+
+                for coordinate in coordinates:
+                    if 0 <= coordinate[1] and coordinate[1] < self.mapsizey and 0 <= coordinate[0] and coordinate[0] < self.mapsizex:
+                        unitTruth[int(coordinate[1]),int(coordinate[0])] = False
+            else: 
+                unitTruth[go.y,go.x] = False
+
+
+        accesibleTiles = np.logical_and(unitTruth,self.walkableTerrain)
+
+
+        plantableArea = np.logical_and(grassArea,accesibleTiles)
 
         maxtree = 1000
         treecount = 0
         maxiterations = 100000
-        treerad = 2
+        treerad = 3
         i=0
         
         while treecount < maxtree and i < maxiterations:
@@ -180,11 +208,27 @@ class Game():
                     if 0 <= coordinate[1] and coordinate[1] < self.mapsizey and 0 <= coordinate[0] and coordinate[0] < self.mapsizex:
                         plantableArea[int(coordinate[1]),int(coordinate[0])] = False
                 treecount+=1
-            i+=1
-                
+            i+=1                
 
 
-        showMap(plantableArea)
+
+    def unitDisplay(self):
+        self.unitMap = np.ones([self.mapsizey, self.mapsizex]) 
+        print(self.unitMap)
+        for go in self.goList:
+            if issubclass(go.__class__,Building):
+                coordinates = coordinatesRange(go.rad) + np.array([go.x,go.y])
+                for coordinate in coordinates:
+
+                    if 0 <= coordinate[1] and coordinate[1] < self.mapsizey and 0 <= coordinate[0] and coordinate[0] < self.mapsizex:
+                        self.unitMap[int(coordinate[1]),int(coordinate[0])] = 0
+                pass
+            else: 
+                self.unitMap[go.y,go.x] = 0
+
+        self.unitMap = self.unitMap *  self.terrainMap
+
+        
 
 
                 
@@ -209,6 +253,7 @@ class Team():
         self.buildings.append(Castle(x,y))
 
         self.vistiles = np.zeros([mapIn.shape[0], mapIn.shape[1]])
+
 
     def visibility(self,mapIn,units,buildings):
         coordlist = []
@@ -298,7 +343,9 @@ class GameObject():
 
 class Tree(GameObject):
 
+
     def __init__(self, x, y):
+        self.color = np.array([0, 200, 0])
 
         super().__init__(x,y)
 
@@ -574,7 +621,7 @@ class Castle(Building):
         self.rad = 3
         self.sumrad = 5
         self.vision_range = 15
-
+        self.color = np.array([160,160,160])
         self.health = 10
 
 
