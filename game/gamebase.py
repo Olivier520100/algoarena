@@ -13,9 +13,9 @@ import numpy as np
 
 import sys
 
-def showMap(displaymap,go=None):
+def showMap(terrainMap,go=None):
         
-    if displaymap.dtype == np.float64:
+    if terrainMap.dtype == np.float64:
         # Terrain types
 
         # 0 = fog
@@ -49,21 +49,21 @@ def showMap(displaymap,go=None):
             9: np.array([143, 101, 0])       # bridge
         }
 
-        imagearray = np.zeros([displaymap.shape[0], displaymap.shape[1], 3])
+        imagearray = np.zeros([terrainMap.shape[0], terrainMap.shape[1], 3])
 
         currentx = 0
 
         currenty = 0
 
-        while currenty < (displaymap).shape[0]:
+        while currenty < (terrainMap).shape[0]:
 
-            if displaymap[currenty, currentx] in terrain_colors:
+            if terrainMap[currenty, currentx] in terrain_colors:
 
-                imagearray[currenty, currentx, :] = terrain_colors[displaymap[currenty, currentx]]
+                imagearray[currenty, currentx, :] = terrain_colors[terrainMap[currenty, currentx]]
 
             currentx += 1
 
-            if currentx == (displaymap).shape[1]:
+            if currentx == (terrainMap).shape[1]:
 
                 currentx = 0
 
@@ -75,15 +75,15 @@ def showMap(displaymap,go=None):
 
     else: 
 
-        imagearray = np.zeros([displaymap.shape[0], displaymap.shape[1], 3])
+        imagearray = np.zeros([terrainMap.shape[0], terrainMap.shape[1], 3])
 
         currentx = 0
     
         currenty = 0
 
-        while currenty < (displaymap).shape[0]:
+        while currenty < (terrainMap).shape[0]:
 
-            if displaymap[currenty, currentx] == False:
+            if terrainMap[currenty, currentx] == False:
 
                 imagearray[currenty, currentx, :] = np.array([0,0,0])
 
@@ -93,7 +93,7 @@ def showMap(displaymap,go=None):
 
             currentx+=1
 
-            if currentx == (displaymap).shape[1]:
+            if currentx == (terrainMap).shape[1]:
 
                 currentx = 0
 
@@ -106,85 +106,88 @@ def showMap(displaymap,go=None):
 def coordinatesRange(range):
     return np.vstack((np.tile(np.arange(-range,range+1,1),range*2+1),np.floor(np.arange(0,(range*2+1)**2,1) / (range*2+1)) - range)).T
 
-
-class Map():
+class Game():
 
     def __init__(self):
-
-        self.displaymap = np.load("algoarenamap1.npy")
-
-
-        self.terrainmap = self.displaymap
-
-        self.mapsizex = (self.displaymap).shape[1]
-
-        self.mapsizey = (self.displaymap).shape[0]
-
-        self.unitmap = np.zeros([self.mapsizey, self.mapsizex])
-
-
-        self.usableMapCreation()
-
-    def showMap(self):
-
-        showMap(self.displaymap)
-        showMap(self.accesibleMap)
         
+        self.terrainMap = np.load("algoarenamap1.npy")
+        self.mapsizex = (self.terrainMap).shape[1]
+        self.mapsizey = (self.terrainMap).shape[0]
+        self.unitmap = np.zeros([self.mapsizey, self.mapsizex])
+        self.team1startcoordsx = 15
+        self.team1startcoordsy = 47
+        self.team2startcoordsx = 160-15
+        self.team2startcoordsy = 47
+        self.team1 = Team(self.team1startcoordsx,self.team1startcoordsy,self.terrainMap)
+        self.team2 = Team(self.team2startcoordsx,self.team2startcoordsy,self.terrainMap)
+        self.trees = []
+        self.goList = []
+        self.walkableMapCreation()
+        self.waterMapCreation()
+        self.mineableMapCreation()
+        self.accesibleMapCreation(self.team1.buildings+self.team1.units+self.team2.buildings+self.team2.units)
+        self.treeGeneration()
+    def gametick(self):
 
-    def usableMapCreation(self):
-        self.usableterrain = (self.displaymap == 2) | (self.displaymap == 3) | (self.displaymap == 4) | (self.displaymap == 9)
+        self.goList = self.team1.buildings+self.team1.units+self.team2.buildings+self.team2.units+self.trees
 
+    def showMap(self,mapIn):
+        showMap(mapIn)
+    def walkableMapCreation(self):
+        self.walkableTerrain = (self.terrainMap == 2) | (self.terrainMap == 3) | (self.terrainMap == 4) | (self.terrainMap == 9)
+    def waterMapCreation(self):
+        self.waterTerrain = (self.terrainMap == 1)
+    def mineableMapCreation(self):
+        self.rockTerrain = (self.terrainMap == 5) | (self.terrainMap == 6) | (self.terrainMap == 7) | (self.terrainMap == 8)
 
-    def accesibleTile(self,objlist):
+    def accesibleMapCreation(self,objlist):
+
         self.unitmap = np.zeros([self.mapsizey, self.mapsizex]) == 0
+
         for go in objlist:
             if issubclass(go.__class__,Building):
                 coordinates = coordinatesRange(go.rad) + np.array([go.x,go.y])
                 for coordinate in coordinates:
-                    
                     if 0 <= coordinate[1] and coordinate[1] < self.mapsizey and 0 <= coordinate[0] and coordinate[0] < self.mapsizex:
                         self.unitmap[int(coordinate[1]),int(coordinate[0])] = False
             else: 
                 self.unitmap[go.y,go.x] = False
 
+        self.accesibleTiles = np.logical_and(self.unitmap,self.accesibleMapCreation)
 
+    def treeGeneration(self):
 
-        self.accesibleMap = np.logical_and(self.unitmap,self.usableterrain )
+        grassArea = (self.terrainMap == 3) | (self.terrainMap == 4)
 
+        plantableArea = np.logical_and(grassArea,self.accesibleTiles)
 
-    
+        maxtree = 1000
+        treecount = 0
+        maxiterations = 100000
+        treerad = 2
+        i=0
         
-    
+        while treecount < maxtree and i < maxiterations:
 
-class Game():
+            randx = random.randint(0,self.mapsizex-1)
+            randy = random.randint(0,self.mapsizey-1)
+            
 
-    def __init__(self):
-
-        self.map = Map()
-        self.team1startcoordsx = 15
-        self.team1startcoordsy = 47
-        self.team2startcoordsx = 160-15
-        self.team2startcoordsy = 47
-        self.team1 = Team(self.team1startcoordsx,self.team1startcoordsy,self.map.displaymap)
-        self.team2 = Team(self.team2startcoordsx,self.team2startcoordsy,self.map.displaymap)
-        self.trees = []
-        self.goList = []
-
-        self.map.accesibleTile(self.team1.buildings+self.team1.units+self.team2.buildings+self.team2.units)
-    def gametick(self):
-
-        self.goList = self.team1.buildings+self.team1.units+self.team2.buildings+self.team2.units+self.trees
+            if plantableArea[randy,randx]:
+                self.trees.append(Tree(randx,randy))
+                coordinates = coordinatesRange(treerad) + np.array([randx,randy])
+                for coordinate in coordinates:
+                    if 0 <= coordinate[1] and coordinate[1] < self.mapsizey and 0 <= coordinate[0] and coordinate[0] < self.mapsizex:
+                        plantableArea[int(coordinate[1]),int(coordinate[0])] = False
+                treecount+=1
+            i+=1
+                
 
 
-        
+        showMap(plantableArea)
 
 
-
-
-
-
-
-
+                
 
 
 class Team():
@@ -206,8 +209,6 @@ class Team():
         self.buildings.append(Castle(x,y))
 
         self.vistiles = np.zeros([mapIn.shape[0], mapIn.shape[1]])
-
-
 
     def visibility(self,mapIn,units,buildings):
         coordlist = []
@@ -238,16 +239,6 @@ class Team():
                 if self.vistiles[coordinates[1],coordinates[0]]  == 1:
                     self.visibleBuildings.append(building)
                     break
-        
-
-
-
-                
-
-
-
-
-
 
 class GameObject():
 
@@ -305,8 +296,11 @@ class GameObject():
 
             print("no actions to execute.")
 
+class Tree(GameObject):
 
+    def __init__(self, x, y):
 
+        super().__init__(x,y)
 
 
 class Units(GameObject):
