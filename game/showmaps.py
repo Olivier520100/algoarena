@@ -134,31 +134,31 @@ def showImageList(terrainMapList):
 
     slider.on_changed(update)
 
-    # plt.show()
-    # expanded_image_list = []
+    plt.show()
+    expanded_image_list = []
 
-    # for image in image_list:
-    #     height, width = image.shape[:2]
-    #     new_size = (width * 10, height * 10)  # Increase both dimensions by a factor of 10
-    #     # Resize using nearest neighbor interpolation
-    #     expanded_image = cv2.resize(image, new_size, interpolation=cv2.INTER_NEAREST)
-    #     expanded_image_list.append(expanded_image)
+    for image in image_list:
+        height, width = image.shape[:2]
+        new_size = (width * 10, height * 10)  # Increase both dimensions by a factor of 10
+        # Resize using nearest neighbor interpolation
+        expanded_image = cv2.resize(image, new_size, interpolation=cv2.INTER_NEAREST)
+        expanded_image_list.append(expanded_image)
         
-    # fourcc = cv2.VideoWriter_fourcc(*'FFV1')  # You can also use other codecs like 'XVID', 'MJPG'.
-    # output_file = 'output_video.mp4'
-    # frame_rate = 24  # Or whatever frame rate you want.
-    # height, width, layers = expanded_image_list[0].shape  # Assumes all images have the same shape.
-    # video = cv2.VideoWriter(output_file, fourcc, frame_rate, (width, height))
+    fourcc = cv2.VideoWriter_fourcc(*'FFV1')  # You can also use other codecs like 'XVID', 'MJPG'.
+    output_file = 'output_video.mp4'
+    frame_rate = 24  # Or whatever frame rate you want.
+    height, width, layers = expanded_image_list[0].shape  # Assumes all images have the same shape.
+    video = cv2.VideoWriter(output_file, fourcc, frame_rate, (width, height))
 
-    # # Add frames to the video.
-    # for image in expanded_image_list:
-    #     frame = cv2.cvtColor(image.astype('uint8'), cv2.COLOR_RGB2BGR)  # Convert RGB to BGR.
-    #     video.write(frame)
+    # Add frames to the video.
+    for image in expanded_image_list:
+        frame = cv2.cvtColor(image.astype('uint8'), cv2.COLOR_RGB2BGR)  # Convert RGB to BGR.
+        video.write(frame)
 
-    # # Release everything when job is finished.
-    # video.release()
+    # Release everything when job is finished.
+    video.release()
 
-    # print("Video saved as", output_file)
+    print("Video saved as", output_file)
 
     
 

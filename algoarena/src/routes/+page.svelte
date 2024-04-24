@@ -4,7 +4,7 @@
 	import video_output from "./output_video.mp4"
 	import video from "./video.mp4"
 	import photo from "./photo.jpg"
-	
+	export let data;
 	
 	// export let data;
 
@@ -84,7 +84,7 @@
 				poster={photo}
 				height="400"
 				width="800"
-				src={video_output}
+				src={data.url}
 				on:mousemove={handleMove}
 				on:touchmove|preventDefault={handleMove}
 				on:mousedown={handleMousedown}
