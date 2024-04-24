@@ -134,7 +134,7 @@ def showImageList(terrainMapList):
 
     slider.on_changed(update)
 
-    # plt.show()
+    plt.show()
     # expanded_image_list = []
 
     # for image in image_list:
