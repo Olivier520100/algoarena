@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ locals, depends }) => {
 	let session = await locals.auth();
 	depends('data:users');
 
-	if (session?.user?.email) {
+	if (!session?.user?.email) {
 		redirect(302, '/');
 	}
 
@@ -49,7 +49,7 @@ export const actions = {
 			return fail(400, { form });
 		}
 		const zimzum = await getXataClient().files.upload(
-			{ table: 'Users', column: 'file', record: user.id },
+			{ table: 'Users', column: 'video', record: user.id },
 			await file.arrayBuffer()
 		);
 

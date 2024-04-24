@@ -1,10 +1,15 @@
-<script>
+<script lang="ts">
 	// These values are bound to properties of the video
 	//@ts-nocheck
+	
+	
+
 	let time = 0;
 	let duration;
 	let paused = true;
-
+	export let data;
+	
+	
 	let showControls = true;
 	let showControlsTimeout;
 
@@ -57,12 +62,15 @@
 
 		return `${minutes}:${seconds}`;
 	}
+
+
+	// "https://sveltejs.github.io/assets/caminandes-llamigos.mp4"
 </script>
 
 <main>
 	<div class="absolute -z-80 triangle-background"></div>
 
-	<div class="absolute z-80 left-1/4 top-40 ">
+	<div class="absolute z-80 left-1/4 top-40">
 		<div class="flex flex-row justify-center justify-items-center">
 			<button class="btn" on:click={removeOneSecond}>left</button>
 			<button class="btn" on:click={addOneSecond}>right</button>
@@ -71,13 +79,13 @@
 			<video
 				class="mx-auto mt-2"
 				poster="https://sveltejs.github.io/assets/caminandes-llamigos.jpg"
-				src="https://sveltejs.github.io/assets/caminandes-llamigos.mp4"
+				src={data.url}
 				on:mousemove={handleMove}
 				on:touchmove|preventDefault={handleMove}
 				on:mousedown={handleMousedown}
 				on:mouseup={handleMouseup}
 				on:keydown={handleClick}
-                on:key
+				on:key
 				bind:currentTime={time}
 				bind:duration
 				bind:paused
