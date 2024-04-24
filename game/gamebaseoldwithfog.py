@@ -1,6 +1,7 @@
 import numpy as np
 
 from PIL import Image
+from matplotlib.widgets import Slider
 
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import pyplot as plt
@@ -18,12 +19,11 @@ def nextPosition(startPosition, endPosition, availablePositionMatrix):
 
     min_value = float('inf')
     next_pos = startPosition
-    print("start position: ", startPosition)
-    print("end position: ", endPosition)
+
     
     weightMatrix = heatMap(startPosition, endPosition, availablePositionMatrix)
 
-    if type(weightMatrix) != bool:
+    if weightMatrix is not None:
 
         rows, cols = weightMatrix.shape
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1),(-1, -1), (-1, 1), (1, -1), (1, 1)]
@@ -34,10 +34,8 @@ def nextPosition(startPosition, endPosition, availablePositionMatrix):
                 if weightMatrix[nx, ny] < min_value:
                     min_value = weightMatrix[nx, ny]
                     next_pos = [nx, ny]
-        print("next position: ", next_pos)
         return next_pos
     else: 
-        print(weightMatrix)
         return startPosition
   
 
@@ -114,7 +112,7 @@ def heatMap(startPosition, endPosition, availablePositionMatrix):
         surroundset = tempnextset
 
     if counter == 10000:
-        return False
+        return None
     
     return weightMatrix
 
@@ -189,6 +187,90 @@ def showBlackWhite(blackwhite):
 
     plt.show()
 
+def getMapImage(terrainMap):
+        
+
+    # Terrain types
+
+    # 0 = fog
+
+    # 1 = water
+
+    # 2 = sand
+
+    # 3 = grass1
+
+    # 4 = grass2
+
+    # 5 = stone1
+
+    # 6 = stone2
+
+    # 7 = stone3
+
+    # 8 = stone4
+
+    terrain_colors = {
+        0: np.array([0, 0, 0]),          # fog
+        1: np.array([0, 0, 255]),        # water
+        2: np.array([255, 255, 0]),      # sand
+        3: np.array([0, 255, 0]),        # grass1
+        4: np.array([0, 255, 0]),        # grass2
+        5: np.array([128, 128, 128]),    # stone1
+        6: np.array([160, 160, 160]),    # stone2
+        7: np.array([180, 180, 180]),    # stone3
+        8: np.array([200, 200, 200]),    # stone4
+        9: np.array([143, 101, 0])       # bridge
+    }
+
+    imagearray = np.zeros([terrainMap.shape[0], terrainMap.shape[1], 3])
+
+    currentx = 0
+
+    currenty = 0
+
+    while currenty < (terrainMap).shape[0]:
+
+        if terrainMap[currenty, currentx] in terrain_colors:
+
+            imagearray[currenty, currentx, :] = terrain_colors[terrainMap[currenty, currentx]]
+
+        currentx += 1
+
+        if currentx == (terrainMap).shape[1]:
+
+            currentx = 0
+
+            currenty += 1
+
+    return (imagearray.astype('uint8'))
+
+def showImageList(terrainMapList):
+
+    image_list = []
+    for frames in terrainMapList:
+        image_list.append(getMapImage(frames))
+
+    fig, ax = plt.subplots()
+    fig.subplots_adjust(bottom=0.25)  # Adjust the subplot to make room for the slider.
+    image_display = plt.imshow(image_list[0], cmap='gray')  # Display the first image.
+    plt.axis('off')  # Hide axes.
+
+    # Function to update the displayed image based on the slider's position.
+    def update(frame_index):
+        image_display.set_data(image_list[int(frame_index)])
+        fig.canvas.draw_idle()
+
+    # Slider setup.
+    ax_slider = plt.axes([0.1, 0.1, 0.8, 0.05])  # Position the slider.
+    slider = Slider(ax=ax_slider, label='Frame', valmin=0, valmax=len(image_list) - 1, valinit=0, valfmt='%0.0f')
+
+    # Register the update function to be called when the slider value changes.
+    slider.on_changed(update)
+
+    plt.show()
+
+    
 
 def showMap(terrainMap):
         
@@ -254,14 +336,16 @@ def showMap(terrainMap):
 def coordinatesRange(range):
     return np.vstack((np.tile(np.arange(-range,range+1,1),range*2+1),np.floor(np.arange(0,(range*2+1)**2,1) / (range*2+1)) - range)).T
 
-class Player():
+
 
     
 
 class Game():
 
     def __init__(self):
-        
+        maxturns = 50
+        turn = 0 
+        self.frames = []
         self.terrainMap = np.load("algoarenamap1.npy")
         self.mapsizex = (self.terrainMap).shape[1]
         self.mapsizey = (self.terrainMap).shape[0]
@@ -286,20 +370,19 @@ class Game():
         self.team1.newState(self.terrainMap,self.team2.units,self.team2.buildings)
         self.goList = self.team1.buildings+self.team1.units+self.trees+self.team2.buildings+self.team2.units
         self.team1.purchaseUnit([30,30])
-        showMap(self.team1.vistiles*self.unitMap)
         self.team1.units[0].moveTo([62,135])
 
-        while True: 
+        while turn < maxturns: 
             self.accesibleMapCreation()
             self.unitDisplay()
             self.team1.newState(self.terrainMap,self.team2.units,self.team2.buildings)
             self.goList = self.team1.buildings+self.team1.units+self.trees+self.team2.buildings+self.team2.units
             self.team1.units[0].action(self.accesibleTiles)
-            showMap(self.team1.vistiles*self.unitMap)
-
-
-
-
+            self.frames.append(self.team1.vistiles*self.unitMap)
+            turn +=1
+        print()
+        showImageList(self.frames)
+        
 
 
 
@@ -533,11 +616,10 @@ class Units(GameObject):
         self.currentaction = "moving_to"
         self.predicat = coord
     
-    def _action(self,availableposition):
+    def action(self,availableposition):
         if self.currentaction == "moving_to":
             if self.coordinates != self.predicat:
                 nextpos = nextPosition(self.coordinates,self.predicat,availableposition)
-                print(nextpos)
                 if nextpos == self.coordinates:
                     self.currentaction = None
                     self.predicat = None
@@ -752,7 +834,7 @@ class Castle(Building):
 
     def _CreateWorker(x, y, team):
 
-        return Worker(x, y, team)
+        team.Worker(x, y)
 
     def _CreateScout(x, y, team):
 
