@@ -1,0 +1,19 @@
+{
+  "id": "mig_cokha2d5hs2t7tjg8jp0",
+  "parentID": "mig_cokh9vt5hs2t7tjg8jo0",
+  "checksum": "1:8ea8bd16ac410873675f3bfb196735328406cf1ca3ed84b5b17f4a7da88f85c5",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "video",
+          "type": "file",
+          "file": {
+            "defaultPublicAccess": true
+          }
+        },
+        "table": "Users"
+      }
+    }
+  ]
+}

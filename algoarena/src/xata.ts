@@ -16,6 +16,7 @@ const tables = [
       { name: "MatchJson", type: "json" },
       { name: "Stats", type: "json" },
       { name: "file", type: "file" },
+      { name: "video", type: "file", file: { defaultPublicAccess: true } },
     ],
   },
   { name: "Matches", columns: [] },
@@ -38,7 +39,7 @@ export type DatabaseSchema = {
 const DatabaseClient = buildClient();
 
 const defaultOptions = {
-  databaseURL: "https://Wolfgang-p564tb.us-east-1.xata.sh/db/AlgoArena",
+  databaseURL: "https://wolfgang-p564tb.us-east-1.xata.sh/db/AlgoArena",
 };
 
 export class XataClient extends DatabaseClient<DatabaseSchema> {

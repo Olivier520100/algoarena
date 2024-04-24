@@ -1,0 +1,19 @@
+{
+  "id": "mig_cok72nrkvctrvtr8kf2g",
+  "parentID": "mig_coaou34osp475jbheua0",
+  "checksum": "1:31300e47c3d01530a6be6f0280442e79467d8245752efaffcad585118c93edd7",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "video",
+          "type": "file[]",
+          "file[]": {
+            "defaultPublicAccess": true
+          }
+        },
+        "table": "Users"
+      }
+    }
+  ]
+}

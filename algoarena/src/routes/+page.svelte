@@ -1,13 +1,16 @@
 <script lang="ts">
 	// These values are bound to properties of the video
 	//@ts-nocheck
+	import video_output from "./output_video.mp4"
+	import video from "./video.mp4"
+	import photo from "./photo.jpg"
 	
 	
+	// export let data;
 
 	let time = 0;
 	let duration;
 	let paused = true;
-	export let data;
 	
 	
 	let showControls = true;
@@ -78,8 +81,10 @@
 		<div class="mx-auto my-auto">
 			<video
 				class="mx-auto mt-2"
-				poster="https://sveltejs.github.io/assets/caminandes-llamigos.jpg"
-				src={data.url}
+				poster={photo}
+				height="400"
+				width="800"
+				src={video_output}
 				on:mousemove={handleMove}
 				on:touchmove|preventDefault={handleMove}
 				on:mousedown={handleMousedown}
