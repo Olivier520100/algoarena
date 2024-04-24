@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ locals, depends }) => {
 	let session = await locals.auth();
 	depends('data:users');
 
-	if (!session?.user?.email) {
+	if (session?.user?.email) {
 		redirect(302, '/');
 	}
 
