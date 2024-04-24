@@ -34,6 +34,7 @@
 		"@xata.io/client": "^0.29.3",
 		"change-file-extension": "^0.1.1",
 		"formsnap": "^1.0.0",
+		"svelte-video-player": "^1.2.5",
 		"sveltekit-superforms": "^2.12.4",
 		"zod": "^3.22.4"
 	}
