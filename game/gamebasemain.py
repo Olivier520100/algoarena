@@ -160,7 +160,7 @@ class Player():
 class Game():
 
     def __init__(self):
-        maxturns = 50
+        maxturns = 500
         turn = 0 
         self.frames = []
         self.player1 = Player()
@@ -283,13 +283,9 @@ class Game():
         self.goList = self.team1.buildings+self.team1.units+self.trees+self.team2.buildings+self.team2.units
 
     def accesibleMapCreation(self):
-
         self.unitTruth = np.zeros([self.mapsizey, self.mapsizex]) == 0
-
         for go in self.goList:
-
             if issubclass(go.__class__,Building):
-                
                 coordinates = coordinatesRange(go.rad) + np.array(go.coordinates)
                 for coordinate in coordinates:
                     if 0 <= coordinate[0] and coordinate[0] < self.mapsizey and 0 <= coordinate[1] and coordinate[1] < self.mapsizex:
@@ -361,7 +357,7 @@ class Game():
                     self.unitMap[go.coordinates[0],go.coordinates[1]] = 11
 
     def playerActions(self):
-        pass
+        for actions in self.player1.unitActions:
 
 
                     

@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 from matplotlib.widgets import Slider
 import numpy as np
+import cv2
 
 terrain_colors = {
         0: np.array([0, 0, 0]),          # fog
@@ -137,6 +138,24 @@ def showImageList(terrainMapList):
     slider.on_changed(update)
 
     plt.show()
+
+    # Define the codec and create a VideoWriter object.
+    # The fourcc (Four-Character Code) defines the codec to encode the frames.
+    fourcc = cv2.VideoWriter_fourcc(*'FFV1')  # You can also use other codecs like 'XVID', 'MJPG'.
+    output_file = 'output_video.avi'
+    frame_rate = 24  # Or whatever frame rate you want.
+    height, width, layers = image_list[0].shape  # Assumes all images have the same shape.
+    video = cv2.VideoWriter(output_file, fourcc, frame_rate, (width, height))
+
+    # Add frames to the video.
+    for image in image_list:
+        frame = cv2.cvtColor(image.astype('uint8'), cv2.COLOR_RGB2BGR)  # Convert RGB to BGR.
+        video.write(frame)
+
+    # Release everything when job is finished.
+    video.release()
+
+    print("Video saved as", output_file)
 
     
 
