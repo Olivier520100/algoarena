@@ -1,7 +1,7 @@
-import gamebase
+import gamebasemain
 
 
 
-game = gamebase.Game()
+game = gamebasemain.Game()
 
 
