@@ -1,17 +1,13 @@
+import copy
 import numpy as np
 
 from PIL import Image
 from matplotlib.widgets import Slider
-
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import pyplot as plt
-
 import random
-
 import math
-
 import numpy as np
-
 import sys
 import player1
 import showmaps
@@ -128,19 +124,27 @@ class Player():
     def __init__(self):
         self.unitActionTypes = {1: "move_to", 2: "gather_resource", 3: "attack", 4: "build"}
         self.buildingActionTypes = {1: "summon"}
+
         self.myUnits = []
         self.myBuildings = []
         self.trees = []
         self.enemyUnits = []
         self.enemyBuildings = []
-        self.unitActions = []
-        self.buildingActions = []
+
+        self.summonRequests= []
+        self.moveRequests = []
+        self.attackUnitRequests = []
+        self.attackBuildingRequests = []
+
+        self.buildRequests = []
+        self.gatherRequests = []
+
         self.wood = 0
         self.stone = 0
 
     def action(self):
-        self.buildingActions.append([1,[30,30]])
 
+        self.buildingActions.append([1,[30,30]])
         if len(self.myUnits) > 0:
 
             self.unitActions.append([1,1,[62,135]])
@@ -160,7 +164,7 @@ class Player():
 class Game():
 
     def __init__(self):
-        maxturns = 500
+        maxturns = 200
         turn = 0 
         self.frames = []
         self.player1 = Player()
@@ -185,6 +189,14 @@ class Game():
         self.accesibleMapCreation()
         self.unitDisplay()
 
+        self.player1.summonRequests.append([1,[30,30]])
+
+        self.playerActions()
+        self.runActions()
+
+        self.player1.moveRequests.append([0,[62,135]])
+
+
         while turn < maxturns: 
             self.goListCreation()
             self.accesibleMapCreation()
@@ -192,10 +204,14 @@ class Game():
             
             self.goList = self.team1.buildings+self.team1.units+self.trees+self.team2.buildings+self.team2.units
 
+            self.playerActions()
+            self.runActions()
+
+
             self.frames.append(self.unitMap)
             self.updatePlayerInfo()
             turn +=1
-
+        print("Finished Simulation")
         showmaps.showImageList(self.frames)
         
     def updatePlayerInfo(self):
@@ -205,7 +221,10 @@ class Game():
                 {
                     "type": units.__class__.__name__,
                     "health": units.health,
-                    "coordinates": units.coordinates
+                    "coordinates": units.coordinates,
+                    "goal": units.goal,
+                    "currentaction": units.currentaction
+
                 }
             )
         for buildings in self.team1.buildings:
@@ -270,7 +289,6 @@ class Game():
                     "coordinates": buildings.coordinates
                 }
             )
-
 
     def walkableMapCreation(self):
         self.walkableTerrain = (self.terrainMap == 2) | (self.terrainMap == 3) | (self.terrainMap == 4) | (self.terrainMap == 9)
@@ -337,7 +355,7 @@ class Game():
             i+=1                
 
     def unitDisplay(self):
-        self.unitMap = self.terrainMap
+        self.unitMap = copy.deepcopy(self.terrainMap)
         for go in self.goList:
             if issubclass(go.__class__,Building):
                 coordinates = coordinatesRange(go.rad) + np.array(go.coordinates)
@@ -357,7 +375,24 @@ class Game():
                     self.unitMap[go.coordinates[0],go.coordinates[1]] = 11
 
     def playerActions(self):
-        for actions in self.player1.unitActions:
+        for requests in self.player1.moveRequests:
+            self.team1.units[requests[0]].goal = "move_to"
+            self.team1.units[requests[0]].currentaction = "move_to"
+            self.team1.units[requests[0]].argument = requests[1]
+        for requests in self.player1.summonRequests:
+            self.team1.summonType = requests[0]
+            self.team1.summonLocation = requests[1]
+    
+    def runActions(self):
+
+        for units in self.team1.units:
+            units.action(self.accesibleTiles)
+        
+        self.team1.action()
+            
+
+
+
 
 
                     
@@ -375,15 +410,28 @@ class Team():
 
         self.buildings.append(Castle(coordinates))
 
+        self.summonLocation = None
+
+        self.summonType = None
+
+    def action(self):
+
+        if self.summonType == 1:
+            self.units.append(Worker(self.summonLocation))
+
+        self.summonLocation = None
+
+        self.summonType = None
+        
+
+
+
 
 class GameObject():
-
-    
 
     def __init__(self, coordinates):
 
         self.possible_actions = set()
-
 
         self.health = 10
 
@@ -412,35 +460,24 @@ class Units(GameObject):
 
         self.cooldown = 1
 
+        self.cooldowncounter = 0
+
         self.range = 2
 
         self.vision_range = 4
         
+        self.goal = None
+
         self.currentaction = None
-        self.predicat = None
 
-    def moveTo(self, coord):
-
-        self.currentaction = "moving_to"
-        self.predicat = coord
+        self.argument = None
     
     def action(self,availableposition):
-        if self.currentaction == "moving_to":
-            if self.coordinates != self.predicat:
-                nextpos = nextPosition(self.coordinates,self.predicat,availableposition)
-                if nextpos == self.coordinates:
-                    self.currentaction = None
-                    self.predicat = None
-                else: 
-                    self.coordinates = nextpos
-        
+        pass
     def attack(self):
 
         # jsp quoi faire
-
-        if (ennemy.pos < self.range):
-
-            pass
+        pass
 
 class UtilityUnits(Units):
 
@@ -464,25 +501,17 @@ class Worker(UtilityUnits):
 
         self.cooldown = 2
 
-    def _execute_next_action(self):
+    def action(self,availableposition):
+        if self.goal == "move_to":
+            if self.coordinates != self.argument:
+                nextpos = nextPosition(self.coordinates,self.argument,availableposition)
+                if nextpos == self.coordinates:
+                    self.currentaction = None
+                    self.argument = None
+                    self.goal = None
+                else: 
+                    self.coordinates = nextpos
 
-        """Execute the next action in the queue, if any."""
-
-        if self.action_queue:
-            
-            action = self.action_queue.pop(0)
-
-            if action == "move_up":
-                self.move_up()
-            elif action == "move_down":
-                self.move_down()
-            elif action == "move_left":
-                self.move_left()
-            elif action == "move_right":
-                self.move_right
-        else:
-
-            print("no actions to execute.")
 
 class CombatUnits(GameObject):
 
