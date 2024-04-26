@@ -480,12 +480,6 @@ class Units(GameObject):
 
         self.argument = None
     
-    def action(self,availableposition):
-        pass
-    def attack(self):
-
-        # jsp quoi faire
-        pass
 
 class UtilityUnits(Units):
 
