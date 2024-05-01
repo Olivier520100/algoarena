@@ -16,10 +16,20 @@ const tables = [
       { name: "MatchJson", type: "json" },
       { name: "Stats", type: "json" },
       { name: "file", type: "file" },
+    ],
+    revLinks: [
+      { column: "User1", table: "Matches" },
+      { column: "User2", table: "Matches" },
+    ],
+  },
+  {
+    name: "Matches",
+    columns: [
+      { name: "User1", type: "link", link: { table: "Users" } },
+      { name: "User2", type: "link", link: { table: "Users" } },
       { name: "video", type: "file", file: { defaultPublicAccess: true } },
     ],
   },
-  { name: "Matches", columns: [] },
 ] as const;
 
 export type SchemaTables = typeof tables;
@@ -49,7 +59,6 @@ export class XataClient extends DatabaseClient<DatabaseSchema> {
 }
 
 let instance: XataClient | undefined = undefined;
-
 
 import { XATA_API_KEY, XATA_BRANCH, XATA_DATABASE_URL } from '$env/static/private';
 

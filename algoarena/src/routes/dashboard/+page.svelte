@@ -52,7 +52,7 @@
 </div>
 
 <div class="relative z-4">
-	<div class="absolute right-0 card">
+	<div class="absolute right-1/4 card">
 		<EloTable users={data.users} />
 	</div>
 </div>

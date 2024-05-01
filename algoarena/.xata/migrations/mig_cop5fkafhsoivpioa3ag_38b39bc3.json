@@ -1,0 +1,19 @@
+{
+  "id": "mig_cop5fkafhsoivpioa3ag",
+  "parentID": "mig_cokha2d5hs2t7tjg8jp0",
+  "checksum": "1:38b39bc3ab4fc9e22de035959a75221fc111c674bfff5636946f13c9f755426a",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "User1",
+          "type": "link",
+          "link": {
+            "table": "Users"
+          }
+        },
+        "table": "Matches"
+      }
+    }
+  ]
+}

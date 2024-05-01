@@ -5,9 +5,16 @@ import { redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	let session = await locals.auth();
-	// if (session?.user?.email) {
-	// 	redirect(302, '/dashboard');
-	// }
+	if (session?.user?.email) {
+	  redirect(302, '/dashboard');
+	}
+	
+
+	const users = await getXataClient()
+		.db.Users.select(['id', 'elo', 'email', 'name'])
+		.sort('elo')
+		.getAll();
+	users.reverse();
 
 	// Check if the user already exists in the database
 	const existingUser = await getXataClient()
@@ -26,6 +33,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 			elo: 700
 		});
 	}
-	return { url: user.video.url };
+	return { url: user.video.url, users: users};
 };
 

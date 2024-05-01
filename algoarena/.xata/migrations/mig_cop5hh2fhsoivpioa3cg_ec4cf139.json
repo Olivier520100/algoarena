@@ -1,0 +1,19 @@
+{
+  "id": "mig_cop5hh2fhsoivpioa3cg",
+  "parentID": "mig_cop5fuafhsoivpioa3bg",
+  "checksum": "1:ec4cf139eead99087d91009324b5fba842c87fa0f7b1e48b12171b03eb5f5c3a",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "video",
+          "type": "file",
+          "file": {
+            "defaultPublicAccess": true
+          }
+        },
+        "table": "Matches"
+      }
+    }
+  ]
+}

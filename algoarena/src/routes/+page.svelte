@@ -1,109 +1,35 @@
 <script lang="ts">
 	// These values are bound to properties of the video
 	//@ts-nocheck
-	import video_output from "./output_video.mp4"
-	import video from "./video.mp4"
-	import photo from "./photo.jpg"
-	export let data;
-	
-	// export let data;
-
-	let time = 0;
-	let duration;
-	let paused = true;
-	
-	
-	let showControls = true;
-	let showControlsTimeout;
-
-	// Used to track time of last mouse down event
-	let lastMouseDown;
-
-	function handleMove(e) {
-		// Make the controls visible, but fade out after
-		// 2.5 seconds of inactivity
-		clearTimeout(showControlsTimeout);
-		showControlsTimeout = setTimeout(() => (showControls = false), 2500);
-		showControls = true;
-
-		if (!duration) return; // video not loaded yet
-		if (e.type !== 'touchmove' && !(e.buttons & 1)) return; // mouse not down
-
-		const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-		const { left, right } = this.getBoundingClientRect();
-		time = (duration * (clientX - left)) / (right - left);
-	}
-
-	// we can't rely on the built-in click event, because it fires
-	// after a drag — we have to listen for clicks ourselves
-	function handleMousedown(e) {
-		lastMouseDown = new Date();
-	}
-
-	function handleMouseup(e) {
-		if (new Date() - lastMouseDown < 300) {
-			if (paused) e.target.play();
-			else e.target.pause();
-		}
-	}
-
-	function handleClick(e) {
-		console.log(e);
-	}
-	function addOneSecond() {
-		time += 0.2;
-	}
-	function removeOneSecond() {
-		time -= 0.2;
-	}
-	function format(seconds) {
-		if (isNaN(seconds)) return '...';
-
-		const minutes = Math.floor(seconds / 60);
-		seconds = Math.floor(seconds % 60);
-		if (seconds < 10) seconds = '0' + seconds;
-
-		return `${minutes}:${seconds}`;
-	}
-
-
-	// "https://sveltejs.github.io/assets/caminandes-llamigos.mp4"
+	import Image from '../lib/assets/castles.png';
+	import { SignIn } from '@auth/sveltekit/components';
 </script>
 
-<main>
-	<div class="absolute -z-80 triangle-background"></div>
+<div class="grid flex-1 grid-cols-3 items-stretch">
+	<img class="m-8 col-span-2 object-cover" src={Image} alt="a successful trade" />
 
-	<div class="absolute z-80 left-1/4 top-40">
-		<div class="flex flex-row justify-center justify-items-center">
-			<button class="btn" on:click={removeOneSecond}>left</button>
-			<button class="btn" on:click={addOneSecond}>right</button>
-		</div>
-		<div class="mx-auto my-auto">
-			<video
-				class="mx-auto mt-2"
-				poster={photo}
-				height="400"
-				width="800"
-				src={data.url}
-				on:mousemove={handleMove}
-				on:touchmove|preventDefault={handleMove}
-				on:mousedown={handleMousedown}
-				on:mouseup={handleMouseup}
-				on:keydown={handleClick}
-				on:key
-				bind:currentTime={time}
-				bind:duration
-				bind:paused
-			>
-				<track kind="captions" />
-			</video>
-			<progress class="mx-auto" value={time / duration || 0} />
+	<main class="my-auto grid min-h-60 min-w-60 gap-8 ">
+		<h1 class="text-center text-4xl font-semibold tracking-tight">Login</h1>
 
-			<div class="info">
-				<span class="time">{format(time)}</span>
-				<span>click anywhere to {paused ? 'play' : 'pause'} / drag to seek</span>
-				<span class="time">{format(duration)}</span>
+		<div class="relative mx-8">
+			<div class="absolute inset-0 mb-8 flex items-center">
+				<span class="w-full border-t"></span>
+			</div>
+
+			<div class="relative flex justify-center text-xs uppercase">
+				<span class="bg-background px-2 text-muted-foreground">continue avec</span>
 			</div>
 		</div>
-	</div>
-</main>
+
+		<div class="card my-auto btn flex flex-row mx-auto gap-2 p-4">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+				><path
+					fill-rule="evenodd"
+					clip-rule="evenodd"
+					d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"
+				></path></svg
+			>
+			<SignIn>GitHub</SignIn>
+		</div>
+	</main>
+</div>
