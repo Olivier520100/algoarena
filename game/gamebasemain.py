@@ -12,6 +12,9 @@ import sys
 import player1
 import showmaps
 
+unitActionTypes = {0: "move_to", 1: "gather_resource", 2: "attack", 3: "build"}
+
+
 def nextPosition(startPosition, endPosition, availablePositionMatrix):
 
     min_value = float('inf')
@@ -117,12 +120,9 @@ def djistras(startPosition, endPosition, availablePositionMatrix):
 def coordinatesRange(range):
     return np.vstack((np.tile(np.arange(-range,range+1,1),range*2+1),np.floor(np.arange(0,(range*2+1)**2,1) / (range*2+1)) - range)).T
 
-
-
 class Player():
 
     def __init__(self):
-        self.unitActionTypes = {1: "move_to", 2: "gather_resource", 3: "attack", 4: "build"}
         self.buildingActionTypes = {1: "summon"}
 
         self.myUnits = []
@@ -144,10 +144,7 @@ class Player():
 
     def action(self):
 
-        self.buildingActions.append([1,[30,30]])
-        if len(self.myUnits) > 0:
-
-            self.unitActions.append([1,1,[62,135]])
+        pass
 
     def reset(self):
         
@@ -156,15 +153,21 @@ class Player():
         self.trees = []
         self.enemyUnits = []
         self.enemyBuildings = []
-        self.unitActions = []
-        self.buildingActions = []
+        self.summonRequests= []
+        self.moveRequests = []
+        self.attackUnitRequests = []
+        self.attackBuildingRequests = []
+
+        self.buildRequests = []
+        self.gatherRequests = []
+
         self.wood = 0
         self.stone = 0
     
 class Game():
 
     def __init__(self):
-        maxturns = 200
+        maxturns = 30
         turn = 0 
         self.frames = []
         self.player1 = Player()
@@ -185,32 +188,42 @@ class Game():
         self.team2 = Team(self.team2startcoords)
 
         self.treeGeneration()
+
+        # Game start !
+
         self.goListCreation()
         self.accesibleMapCreation()
         self.unitDisplay()
+        self.updatePlayerInfo()
 
         self.player1.summonRequests.append([1,[30,30]])
 
         self.playerActions()
         self.runActions()
 
+        self.goListCreation()
+        self.accesibleMapCreation()
+        self.unitDisplay()
+        self.updatePlayerInfo()
+
+
         self.player1.moveRequests.append([0,[62,135]])
+
+        self.playerActions()
+        self.runActions()
 
 
         while turn < maxturns: 
             self.goListCreation()
             self.accesibleMapCreation()
             self.unitDisplay()
-            
-            self.goList = self.team1.buildings+self.team1.units+self.trees+self.team2.buildings+self.team2.units
-
             self.playerActions()
             self.runActions()
-
 
             self.frames.append(self.unitMap)
             self.updatePlayerInfo()
             turn +=1
+            
         print("Finished Simulation")
         showmaps.showImageList(self.frames)
         
@@ -379,6 +392,7 @@ class Game():
             self.team1.units[requests[0]].goal = "move_to"
             self.team1.units[requests[0]].currentaction = "move_to"
             self.team1.units[requests[0]].argument = requests[1]
+            
         for requests in self.player1.summonRequests:
             self.team1.summonType = requests[0]
             self.team1.summonLocation = requests[1]
@@ -389,12 +403,6 @@ class Game():
             units.action(self.accesibleTiles)
         
         self.team1.action()
-            
-
-
-
-
-
                     
 class Team():
 
@@ -472,12 +480,6 @@ class Units(GameObject):
 
         self.argument = None
     
-    def action(self,availableposition):
-        pass
-    def attack(self):
-
-        # jsp quoi faire
-        pass
 
 class UtilityUnits(Units):
 
