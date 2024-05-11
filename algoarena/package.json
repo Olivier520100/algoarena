@@ -30,7 +30,8 @@
 	"dependencies": {
 		"@auth/sveltekit": "^0.14.2",
 		"@floating-ui/dom": "^1.6.3",
-		"@tabler/icons-svelte": "^3.1.0",
+		"@splidejs/svelte-splide": "^0.2.9",
+		"@tabler/icons-svelte": "^3.3.0",
 		"@xata.io/client": "^0.29.3",
 		"change-file-extension": "^0.1.1",
 		"formsnap": "^1.0.0",
