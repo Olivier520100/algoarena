@@ -1,18 +1,12 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
+	import EloTable from '../../components/EloTable.svelte';
+
 	import { onMount } from 'svelte';
 
 	export let data;
 
-    onMount(() => {
-		const interval = setInterval(() => {
-			invalidate('data:matches');
-		}, 5000);
-
-		return () => {
-			clearInterval(interval);
-		};
-	});
+    
 </script>
 
 <table class="table overflow-hidden">
@@ -33,3 +27,10 @@
 		</tr>
 	{/each}
 </table>
+
+<div class="relative z-4">
+	<div class="absolute right-1/4 card">
+		<EloTable users={data.users} />
+	</div>
+</div>
+

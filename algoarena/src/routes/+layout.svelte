@@ -5,10 +5,22 @@
 	import { IconCrown } from '@tabler/icons-svelte';
 	import { SignIn, SignOut } from '@auth/sveltekit/components';
 	import { popup, type PopupOptions } from '$lib/popup';
+	import { onMount } from 'svelte';
+	import { invalidate } from '$app/navigation';
 	const popupSettings: PopupOptions = {
 		popupId: 'popupNavIcon',
 		placement: 'bottom'
 	};
+
+	onMount(() => {
+		const interval = setInterval(() => {
+			invalidate('data:elo');
+		}, 5000);
+
+		return () => {
+			clearInterval(interval);
+		};
+	});
 </script>
 
 <div class="flex justify-between border-2 main px-4 py-2 h-[10vh]">

@@ -33,6 +33,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 			elo: 700
 		});
 	}
-	return { url: user.video.url, users: users};
+	return {  users: users};
 };
 

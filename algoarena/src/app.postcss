@@ -10,9 +10,9 @@
 	.triangle-background {
 		width: 50vw; /* Adjust the width as needed */
 		height: 90vh; /* Adjust the height as needed */
-		background: linear-gradient(to right, #40A2E3, #40A2E3);
+		background: linear-gradient(to right, #40a2e3, #40a2e3);
 		clip-path: polygon(0 0, 100% 0, 0 100%);
-	  }
+	}
 
 	.h1 {
 		@apply mb-4 text-2xl font-bold;
@@ -60,6 +60,14 @@
 	.hr {
 		@apply h-0.5 rounded bg-dark;
 	}
+	.demo-widget {
+		background: #f1f1f1;
+		height: 100%;
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
 	.label {
 		@apply grid gap-1;
@@ -73,7 +81,7 @@
 		border-collapse: collapse;
 		width: 100%;
 	}
-	
+
 	.file-input {
 		padding: '8px 16px';
 		background: '#77F';
@@ -100,8 +108,6 @@
 		@apply absolute -z-10 rotate-45;
 		@apply h-3 w-3 rounded-sm bg-dark;
 	}
-
-	
 
 	.info {
 		display: flex;
@@ -136,8 +142,12 @@
 		background-color: rgba(0, 0, 0, 0.2);
 	}
 
-	progress::-webkit-progress-value {
+	.progress::-webkit-progress-value {
 		background-color: rgba(255, 255, 255, 0.6);
 	}
+
+
+
+
 
 }
