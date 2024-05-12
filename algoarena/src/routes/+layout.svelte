@@ -27,15 +27,17 @@
 	<a class="flex items-center gap-2" href="/dashboard">
 		<h1 class="h1 mt-4 text-main-blue">AlgoArena</h1>
 	</a>
-	<div class="flex items-center gap-4">
+	<div class="flex items-center gap-2">
 		<!-- <a class="btn" href="/rankings"> Rankings </a> -->
-
+		<a class="mr-2" href="/matches">
+			<h1 class="text-main-blue">Classement</h1>
+		</a>
 		{#if data.user}
 			{#if data.elo}
 				<IconCrown />
 				<p>{data.elo}</p>
 			{/if}
-			<button class="btn btn-flat h-10 w-10 p-0" use:popup={popupSettings}>
+			<button class="btn btn-flat ml-2 h-10 w-10 p-0" use:popup={popupSettings}>
 				<img src={data.avatar} class="object-cover" alt="your user avatar" />
 			</button>
 		{:else}
