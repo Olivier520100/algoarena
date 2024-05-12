@@ -49,7 +49,7 @@ export const actions = {
 			return fail(400, { form });
 		}
 		const zimzum = await getXataClient().files.upload(
-			{ table: 'Users', column: 'video', record: user.id },
+			{ table: 'Users', column: 'file', record: user.id },
 			await file.arrayBuffer()
 		);
 
