@@ -9,12 +9,12 @@
       },
       {
         titre: "2. Surveillez votre adversaire",
-        gifUrl: "algoarena\\src\\routes\\howtoplay\\gifs\\tuto1.gif",
+        gifUrl: "algoarena\\src\\routes\\howtoplay\\gifs\\tuto2.gif",
         description: "Avec vos ressources, construisez un Éclaireur qui vous permettera de voir ce que votre adversaire est en train de plannifier. Attention de ne pas le perdre au combat!"
       },
       {
         titre: "3. Rassemblez votre armée",
-        gifUrl: "algoarena\\src\\routes\\howtoplay\\gifs\\tuto1.gif",
+        gifUrl: "algoarena\\src\\routes\\howtoplay\\gifs\\tuto3.gif",
         description: "Maintenant que vous avez amasser des ressources et vous connaissez le plan de votre adversaire, c'est le temps d'attaquer. Construisez les unités de combat nécessaires pour contrez la stratégie opposante et obtenir la victoire."
       },
       {
