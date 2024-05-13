@@ -29,6 +29,8 @@
 	"type": "module",
 	"dependencies": {
 		"@auth/sveltekit": "^0.14.2",
+		"@codemirror/lang-python": "^6.1.6",
+		"@codemirror/theme-one-dark": "^6.1.2",
 		"@floating-ui/dom": "^1.6.3",
 		"@splidejs/svelte-splide": "^0.2.9",
 		"@tabler/icons-svelte": "^3.3.0",
