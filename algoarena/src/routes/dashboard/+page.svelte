@@ -5,6 +5,11 @@
 	import tuto1 from '$lib/assets/gifs/tuto1.gif';
 	import tuto2 from '$lib/assets/gifs/tuto2.gif';
 	import tuto3 from '$lib/assets/gifs/tuto3.gif';
+	import tuto4 from '$lib/assets/gifs/tuto4.gif';
+	import tuto3_1 from '$lib/assets/gifs/tuto3_1.gif';
+	import tuto3_2 from '$lib/assets/gifs/tuto3_2.gif';
+	import tuto3_3 from '$lib/assets/gifs/tuto3_3.gif';
+	import tuto3_4 from '$lib/assets/gifs/tuto3_4.gif';
 
 	export let data;
 	let value = '';
@@ -52,22 +57,37 @@
 					</SplideSlide>
 					<SplideSlide>
 						<a href="#target-2">
-							<img src={tuto2} class="object-cover" alt="Surveillez" />
-						</a>
-					</SplideSlide>
-					<SplideSlide>
-						<a href="#target-3">
 							<img src={tuto3} class="object-cover" alt="Attaquez" />
 						</a>
 					</SplideSlide>
 					<SplideSlide>
+						<a href="#target-3">
+							<img src={tuto3_1} class="object-cover" alt="Melee" />
+						</a>
+					</SplideSlide>
+					<SplideSlide>
 						<a href="#target-4">
-							<img src={tuto3} class="object-cover" alt="Victoire" />
+							<img src={tuto3_2} class="object-cover" alt="Archer" />
+						</a>
+					</SplideSlide>
+					<SplideSlide>
+						<a href="#target-5">
+							<img src={tuto3_3} class="object-cover" alt="Tank" />
+						</a>
+					</SplideSlide>
+					<SplideSlide>
+						<a href="#target-6">
+							<img src={tuto3_4} class="object-cover" alt="Cannon" />
+						</a>
+					</SplideSlide>
+					<SplideSlide>
+						<a href="#target-7">
+							<img src={tuto4} class="object-cover" alt="Victoire" />
 						</a>
 					</SplideSlide>
 				</SplideTrack>
 
-				<div class="splide__progress h-4">
+				<div class="splide__progress h-7">
 					<div class="splide__progress__bar" />
 				</div>
 
@@ -96,27 +116,17 @@
 
 	<div class="absolute flex flex-col m-20 gap-40">
 		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-1" class="h1">1. Collectez vos ressources</h1>
+			<h1 id="target-1" class="h1">1. Ramassez vos ressources</h1>
 			<p>
-				Vous commencerez la partie avec un Travailleur. Celui-ci vous permettera de collectionner
+				Vous commencez la partie avec un Travailleur. Celui-ci vous permettera de collecter
 				les ressources (Arbre) sur la carte. Rammenez ces ressources dans votre chateau pour les
-				ajouter à votre inventaire.
+				ajouter à votre stock.
 			</p>
 			<p>Code</p>
 		</div>
 
 		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-2" class="h1">2. Surveillez votre adversaire</h1>
-			<p>
-				Avec vos ressources, construisez un Éclaireur qui vous permettera de voir ce que votre
-				adversaire est en train de plannifier. Attention de ne pas le perdre au combat!
-			</p>
-
-			<p>Code</p>
-		</div>
-
-		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-3" class="h1">3. Rassemblez votre armée</h1>
+			<h1 id="target-2" class="h1">3. Rassemblez votre armée</h1>
 			<p>
 				Maintenant que vous avez amasser des ressources et vous connaissez le plan de votre
 				adversaire, c'est le temps d'attaquer. Construisez les unités de combat nécessaires pour
@@ -127,10 +137,50 @@
 		</div>
 
 		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-4" class="h1">4. Conditions de victoire</h1>
+			<h1 id="target-3" class="h1">3.1. Unité Mélée </h1>
+			<p>
+				Polyvalente et peu couteuse, cette unité est très utile au début du jeu pour défendre ou attaquer.
+			</p>
+
+			<p>Code</p>
+		</div>
+
+		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+			<h1 id="target-4" class="h1">3.2. Unité Archer </h1>
+			<p>
+				Cette unité attaque à distance et fonctionne mieux lorsque protégée par d'autres unités ou dans des goulots d'étouffement.
+			</p>
+
+			<p>Code</p>
+		</div>
+
+		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+			<h1 id="target-5" class="h1">3.3. Unité Tank </h1>
+			<p>
+				Comme son nom l'indique, 
+				cette unité peux absorber beaucoup de dégat avant de se faire détruire. 
+				En retour, elle ne fait pas beaucoup de dégat et est très couteuse.
+			</p>
+
+			<p>Code</p>
+		</div>
+		
+		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+			<h1 id="target-6" class="h1">3.4. Unité Cannon </h1>
+			<p>
+				Cette unité est la plus couteuse en ressources et celle qui a le moins de vie. 
+				En échange, elle fait beaucoup plus de dégat à distance aux unités et aux structures adverses. 
+				Très important pour garantir une victoire en fin de jeu.
+			</p>
+
+			<p>Code</p>
+		</div>
+
+		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+			<h1 id="target-7" class="h1">4. Conditions de victoire</h1>
 			<p>
 				Pour gagner la partie, il faut avoir détruit le chateau adverse, ou avoir détruit toutes les
-				unitées adverses. Attention, car votre adversaire essayera de faire la même chose!
+				unitées adverses. Attention, car votre adversaire essayera aussi de faire la même chose!
 			</p>
 
 			<p>Code</p>
