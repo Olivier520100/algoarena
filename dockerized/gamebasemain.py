@@ -1,19 +1,12 @@
-import copy
 import numpy as np
 
-from PIL import Image
 import pandas
-from matplotlib.widgets import Slider
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import pyplot as plt
 import random
 import numpy as np
+
 import player1
 import player2
-
 import videogeneration
-
-from gameRequests import Request
 from player import Player
 
 
