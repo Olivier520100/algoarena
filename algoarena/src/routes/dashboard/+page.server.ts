@@ -4,6 +4,7 @@ import { superValidate, fail, message } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { error, redirect } from '@sveltejs/kit';
 import { pyUploadSchema } from './schema';
+import {withFiles} from 'sveltekit-superforms';
 
 export const load: PageServerLoad = async ({ locals, depends }) => {
 	let session = await locals.auth();
@@ -36,8 +37,9 @@ export const actions = {
 			return fail(400, { form });
 		}
 		const file = form.data.pyFile;
+		console.log(file);
 
-		form.data.pyFile = undefined;
+
 
 		const user = await getXataClient()
 			.db.Users.filter({
@@ -46,15 +48,17 @@ export const actions = {
 			.getFirst(); // Use getFirst() to attempt to fetch a single user record
 
 		if (!user) {
-			return fail(400, { form });
+			return fail(400, withFiles({ form }));
 		}
+	
+
 		const zimzum = await getXataClient().files.upload(
 			{ table: 'Users', column: 'file', record: user.id },
 			await file.arrayBuffer()
 		);
 
-		console.log(file);
+		
 
-		return { form };
+		return withFiles({ form });
 	}
 };

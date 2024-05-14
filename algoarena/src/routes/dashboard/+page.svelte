@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
-	import { Control, Field } from 'formsnap';
+	import { Control, Field, FieldErrors } from 'formsnap';
 
 	import tuto1 from '$lib/assets/gifs/tuto1.gif';
 	import tuto2 from '$lib/assets/gifs/tuto2.gif';
@@ -33,6 +33,8 @@
 			console.error('Error processing string:', error);
 		}
 	}
+	// @ts-ignore
+	const onFileInput = (e: Event) => ($formData.pyFile = e.currentTarget?.files?.item(0) as File);
 
 	export let data;
 	let value = '';
@@ -112,24 +114,25 @@
 				<form use:enhance method="POST" enctype="multipart/form-data">
 					<Field {form} name="pyFile">
 						<Control let:attrs>
-							<input {...attrs} bind:files type="file" />
+							<input {...attrs} bind:files type="file" on:input={onFileInput} />
 						</Control>
+						<FieldErrors></FieldErrors>
 					</Field>
 					<button
 						class="btn mt-2"
 						on:click={() => {
-							console.log($formData);
+							console.log($formData, files);
 						}}>Envoyer</button
 					>
 				</form>
 			</div>
 		</div>
 	{:else}
-		<div class="">
-			<p class="ml-1 mb-1">*Sélectionne une vidéo pour sa description</p>
+		<div class="text-center">
+			<p class="mt-4 mb-1">*Sélectionne une vidéo pour sa description</p>
 
 			<Splide
-				class=""
+				class="w-[800px] h-[500px] mx-auto"
 				hasTrack={false}
 				aria-label="Game Rules"
 				options={{
@@ -139,7 +142,7 @@
 					autoplay: true
 				}}
 			>
-				<SplideTrack class="img-slider">
+				<SplideTrack>
 					<SplideSlide>
 						<a href="#target-1"><img src={tuto1} class="object-cover" alt="Collectez" /> </a>
 					</SplideSlide>
@@ -186,74 +189,76 @@
 			</Splide>
 		</div>
 
-	<div class="absolute flex flex-col m-20 gap-40">
-		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-1" class="h1">1. Ramassez vos ressources</h1>
-			<p>
-				Vous commencez la partie avec un Travailleur. Celui-ci vous permettera de collecter
-				les ressources (Arbre) sur la carte. Rammenez ces ressources dans votre chateau pour les
-				ajouter à votre stock.
-			</p>
-			<p>Code</p>
-		</div>
+		<div class="absolute flex flex-col m-20 gap-40">
+			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+				<h1 id="target-1" class="h1">1. Ramassez vos ressources</h1>
+				<p>
+					Vous commencez la partie avec un Travailleur. Celui-ci vous permettera de collecter les
+					ressources (Arbre) sur la carte. Rammenez ces ressources dans votre chateau pour les
+					ajouter à votre stock.
+				</p>
+				<p>Code</p>
+			</div>
 
-		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-2" class="h1">3. Rassemblez votre armée</h1>
-			<p>
-				Maintenant que vous avez amasser des ressources et vous connaissez le plan de votre
-				adversaire, c'est le temps d'attaquer. Construisez les unités de combat nécessaires pour
-				contrez la stratégie opposante et obtenir la victoire.
-			</p>
+			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+				<h1 id="target-2" class="h1">3. Rassemblez votre armée</h1>
+				<p>
+					Maintenant que vous avez amasser des ressources et vous connaissez le plan de votre
+					adversaire, c'est le temps d'attaquer. Construisez les unités de combat nécessaires pour
+					contrez la stratégie opposante et obtenir la victoire.
+				</p>
 
 				<p>Code</p>
 			</div>
 
-		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-3" class="h1">3.1. Unité Mélée </h1>
-			<p>
-				Polyvalente et peu couteuse, cette unité est très utile au début du jeu pour défendre ou attaquer.
-			</p>
+			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+				<h1 id="target-3" class="h1">3.1. Unité Mélée</h1>
+				<p>
+					Polyvalente et peu couteuse, cette unité est très utile au début du jeu pour défendre ou
+					attaquer.
+				</p>
 
-			<p>Code</p>
-		</div>
+				<p>Code</p>
+			</div>
 
-		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-4" class="h1">3.2. Unité Archer </h1>
-			<p>
-				Cette unité attaque à distance et fonctionne mieux lorsque protégée par d'autres unités ou dans des goulots d'étouffement.
-			</p>
+			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+				<h1 id="target-4" class="h1">3.2. Unité Archer</h1>
+				<p>
+					Cette unité attaque à distance et fonctionne mieux lorsque protégée par d'autres unités ou
+					dans des goulots d'étouffement.
+				</p>
 
-			<p>Code</p>
-		</div>
+				<p>Code</p>
+			</div>
 
-		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-5" class="h1">3.3. Unité Tank </h1>
-			<p>
-				Comme son nom l'indique, 
-				cette unité peux absorber beaucoup de dégat avant de se faire détruire. 
-				En retour, elle ne fait pas beaucoup de dégat et est très couteuse.
-			</p>
+			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+				<h1 id="target-5" class="h1">3.3. Unité Tank</h1>
+				<p>
+					Comme son nom l'indique, cette unité peux absorber beaucoup de dégat avant de se faire
+					détruire. En retour, elle ne fait pas beaucoup de dégat et est très couteuse.
+				</p>
 
-			<p>Code</p>
-		</div>
-		
-		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-6" class="h1">3.4. Unité Cannon </h1>
-			<p>
-				Cette unité est la plus couteuse en ressources et celle qui a le moins de vie. 
-				En échange, elle fait beaucoup plus de dégat à distance aux unités et aux structures adverses. 
-				Très important pour garantir une victoire en fin de jeu.
-			</p>
+				<p>Code</p>
+			</div>
 
-			<p>Code</p>
-		</div>
+			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+				<h1 id="target-6" class="h1">3.4. Unité Cannon</h1>
+				<p>
+					Cette unité est la plus couteuse en ressources et celle qui a le moins de vie. En échange,
+					elle fait beaucoup plus de dégat à distance aux unités et aux structures adverses. Très
+					important pour garantir une victoire en fin de jeu.
+				</p>
 
-		<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-			<h1 id="target-7" class="h1">4. Conditions de victoire</h1>
-			<p>
-				Pour gagner la partie, il faut avoir détruit le chateau adverse, ou avoir détruit toutes les
-				unitées adverses. Attention, car votre adversaire essayera aussi de faire la même chose!
-			</p>
+				<p>Code</p>
+			</div>
+
+			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
+				<h1 id="target-7" class="h1">4. Conditions de victoire</h1>
+				<p>
+					Pour gagner la partie, il faut avoir détruit le chateau adverse, ou avoir détruit toutes
+					les unitées adverses. Attention, car votre adversaire essayera aussi de faire la même
+					chose!
+				</p>
 
 				<p>Code</p>
 			</div>
