@@ -15,7 +15,7 @@ def finalElo(rA, rB,result):
     return round(rA + 400*(resultuser1-expectedrateuser1)),round(rB + 400*(resultuser2-expectedrateuser2))
 
 
-load_dotenv("../algoarena/.env")
+load_dotenv(".env")
 db_url_env = os.environ.get("XATA_DATABASE_URL")
 api_key_env = os.environ.get("XATA_API_KEY")
 xata = XataClient(db_url=db_url_env,api_key=api_key_env)
@@ -93,7 +93,7 @@ f.close()
 
 import gamebasemain
 game = gamebasemain.Game()
-result = game.gameRun(gameid,2000)
+result = game.gameRun(gameid,5000)
 if (result[0] + result[1]) >=2:
     result = (0.5,0.5)
 finalElo1, finalElo2 = finalElo(users[user1]['elo'],users[user2]['elo'],result)
