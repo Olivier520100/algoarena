@@ -149,8 +149,8 @@ def showImageList(mapList,gameID):
     for frames in mapList:
         image_list.append(getMapImageWithSprites(frames))
         
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    output_file = f'videos/{gameID}.mov'
+    fourcc = cv2.VideoWriter_fourcc(*'HVEC')
+    output_file = f'videos/{gameID}.mp4'
     frame_rate = 24
     height, width, layers = image_list[0].shape
     video = cv2.VideoWriter(output_file, fourcc, frame_rate, (width, height))

@@ -1,19 +1,12 @@
-import copy
 import numpy as np
 
-from PIL import Image
 import pandas
-from matplotlib.widgets import Slider
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import pyplot as plt
 import random
 import numpy as np
+
 import player1
 import player2
-
 import videogeneration
-
-from gameRequests import Request
 from player import Player
 
 
@@ -151,7 +144,7 @@ class Game():
 
         
         self.gameOutcome = (1,1)
-        self.maxturns = 200
+        self.maxturns = 10
         self.turn = 0 
         self.frames = []
         self.player1 = Player()
@@ -177,8 +170,8 @@ class Game():
 
         self.treeGeneration()
     
-    def gameRun(self, gameId):
-
+    def gameRun(self, gameId, maxturn):
+        self.maxturns = maxturn
         
         print("Started Simulation")
 
