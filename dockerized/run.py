@@ -3,6 +3,23 @@ from dotenv import load_dotenv
 import os
 import random
 import base64
+import socket
+import sys 
+
+## THANKS TO  nh2  on stack overflow
+deny_connects = False
+
+def deny_network_connections():
+    global deny_connects
+
+    def audit_hook_deny_connects(event: str, args):
+        if deny_connects and event == 'socket.connect':
+            sock: socket.socket = args[0]
+            if sock.family != socket.AddressFamily.AF_UNIX:
+                raise Exception("Network connection denied to prevent accidental Internet access")
+
+    deny_connects = True
+    sys.addaudithook(audit_hook_deny_connects)
 
 def expectedScore(rA, rB):
     return 1/(1+10**((rB-rA)/400)),1/(1+10**((rA-rB)/400))
@@ -51,6 +68,10 @@ while True:
             exists = True
             gameid = datapoint["id"]
             break
+        if datapoint["User1"]["id"] == user2id and datapoint["User2"]["id"] == user1id:
+            exists = True
+            gameid = datapoint["id"]
+            break
             
     if exists:
         print(gameid)
@@ -90,22 +111,36 @@ while True:
     f.write((file2contentdecode))
     f.close()
 
+    deny_network_connections()
+    try:
+        import gamebasemain
+        game = gamebasemain.Game()
+        result = game.gameRun(gameid, 2000)
+    finally:
+        # Restore network connections
+        deny_connects = False
 
-    import gamebasemain
-    game = gamebasemain.Game()
-    result = game.gameRun(gameid,2000)
+    dbresult = 0
     if (result[0] + result[1]) >=2:
         result = (0.5,0.5)
+    elif result[0] == 1:
+        dbresult = 1
+    elif result[1] == 1:
+        dbresult = 2
     finalElo1, finalElo2 = finalElo(users[user1]['elo'],users[user2]['elo'],result)
+
+    ##Display the Elo
 
     print("Elo 1: ", users[user1]['elo'],"Final Elo 1: ",finalElo1, "ID: ", users[user1]['id'], "Name:", users[user1]['name'])
     print("Elo 2: ",users[user2]['elo'],"Final Elo 2: ",finalElo2, "ID: ", users[user2]['id'],  "Name:", users[user2]['name'])
 
+    ## Update users ELO
     try:
         data = xata.records().update("Users", users[user1]['id'], {
             "elo": finalElo1
         })
         assert data.is_success()
+
     except:
         print("Error changing elo")   
 
@@ -116,19 +151,39 @@ while True:
         assert data.is_success()
     except:
         print("Error changing elo")   
-    with open(f"videos/{gameid}.mp4", "rb") as f:
 
-        videodata = f.read()
+    try:
+        data = xata.records().update("Matches", gameid, {
 
-    f.close()
+        "winner": dbresult,
+        "hasVideo": True
+        })
+        assert data.is_success()
 
-    response = xata.files().put(
-    "Matches",
-    gameid,
-    "video",
-    videodata,
-    "video/mp4"
-    )
+    except:
+        print("error updating matches file")   
+
+    try:
+
+        with open(f"videos/{gameid}.mp4", "rb") as f:
+
+            videodata = f.read()
+
+        f.close()
+
+        response = xata.files().put(
+        "Matches",
+        gameid,
+        "video",
+        videodata,
+        "video/mp4"
+        )
+
+    except:
+        print("error on video upload")   
+
+
+
 
 
 
