@@ -1,0 +1,18 @@
+{
+  "id": "mig_cp4g0b6nac7n4q9f4460",
+  "parentID": "mig_cp4g01enac7n4q9f4450",
+  "checksum": "1:beb1fab012c5b13adc5c4529e30c2577d86ca42dd733ee2a7080db113c96e38a",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "winner",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        },
+        "table": "Matches"
+      }
+    }
+  ]
+}

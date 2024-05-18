@@ -2,6 +2,8 @@
 	// These values are bound to properties of the video
 	//@ts-nocheck
 	import photo from "$lib/assets/castles.png"
+	import linus from "$lib/assets/iu.png"
+	import {IconArrowLeft,IconArrowRight} from "@tabler/icons-svelte"
 	export let data;
 	
 	// export let data;
@@ -68,12 +70,13 @@
 </script>
 
 <main>
+	{#if data.url}
 	<div class="absolute -z-80 triangle-background"></div>
 
 	<div class="absolute z-80 left-1/4 top-40">
 		<div class="flex flex-row justify-center justify-items-center">
-			<button class="btn" on:click={removeOneSecond}>left</button>
-			<button class="btn" on:click={addOneSecond}>right</button>
+			<button class="btn" on:click={removeOneSecond}><IconArrowLeft/></button>
+			<button class="btn" on:click={addOneSecond}><IconArrowRight/></button>
 		</div>
 		<div class="mx-auto my-auto">
 			<video
@@ -103,5 +106,8 @@
 			</div>
 		</div>
 	</div>
-</main>
+	{:else}
+	<img alt="linus" src={linus} class="h-full w-full"/>
 
+	{/if}
+</main>

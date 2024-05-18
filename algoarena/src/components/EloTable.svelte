@@ -2,7 +2,7 @@
 	export let users: { name: string|undefined|null; elo: number|undefined|null; email: string|undefined|null; }[];
 </script>
 
-<table class="table overflow-hidden">
+<table class="table w-full ">
 	<tr class="tr">
 		<th class="th">Name</th>
 		<th class="th">Elo</th>

@@ -57,6 +57,9 @@ export const actions = {
 			await file.arrayBuffer()
 		);
 
+		const record = await xata.db.Users.update(user.id, {
+			fileChecked: false,
+		});
 		
 
 		return withFiles({ form });

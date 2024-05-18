@@ -1,0 +1,18 @@
+{
+  "id": "mig_cp4g01enac7n4q9f4450",
+  "parentID": "mig_cop5ilifhsoivpioa3eg",
+  "checksum": "1:3b6b9fcaff36c7ef8ea31e8494cdc7cb37aee836e92729bd3fc6bdac02ad362d",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "fileChecked",
+          "type": "bool",
+          "notNull": true,
+          "defaultValue": "false"
+        },
+        "table": "Users"
+      }
+    }
+  ]
+}

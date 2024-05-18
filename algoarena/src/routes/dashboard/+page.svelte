@@ -201,7 +201,7 @@
 			</div>
 
 			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-				<h1 id="target-2" class="h1">3. Rassemblez votre armée</h1>
+				<h1 id="target-2" class="h1">2. Rassemblez votre armée</h1>
 				<p>
 					Maintenant que vous avez amasser des ressources et vous connaissez le plan de votre
 					adversaire, c'est le temps d'attaquer. Construisez les unités de combat nécessaires pour
@@ -212,7 +212,7 @@
 			</div>
 
 			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-				<h1 id="target-3" class="h1">3.1. Unité Mélée</h1>
+				<h1 id="target-3" class="h1">2.1. Unité Mélée</h1>
 				<p>
 					Polyvalente et peu couteuse, cette unité est très utile au début du jeu pour défendre ou
 					attaquer.
@@ -222,7 +222,7 @@
 			</div>
 
 			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-				<h1 id="target-4" class="h1">3.2. Unité Archer</h1>
+				<h1 id="target-4" class="h1">2.2. Unité Archer</h1>
 				<p>
 					Cette unité attaque à distance et fonctionne mieux lorsque protégée par d'autres unités ou
 					dans des goulots d'étouffement.
@@ -232,7 +232,7 @@
 			</div>
 
 			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-				<h1 id="target-5" class="h1">3.3. Unité Tank</h1>
+				<h1 id="target-5" class="h1">2.3. Unité Tank</h1>
 				<p>
 					Comme son nom l'indique, cette unité peux absorber beaucoup de dégat avant de se faire
 					détruire. En retour, elle ne fait pas beaucoup de dégat et est très couteuse.
@@ -242,7 +242,7 @@
 			</div>
 
 			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-				<h1 id="target-6" class="h1">3.4. Unité Cannon</h1>
+				<h1 id="target-6" class="h1">2.4. Unité Cannon</h1>
 				<p>
 					Cette unité est la plus couteuse en ressources et celle qui a le moins de vie. En échange,
 					elle fait beaucoup plus de dégat à distance aux unités et aux structures adverses. Très
@@ -253,7 +253,7 @@
 			</div>
 
 			<div class="justify-center items-center mx-auto text-center flex flex-col gap-10">
-				<h1 id="target-7" class="h1">4. Conditions de victoire</h1>
+				<h1 id="target-7" class="h1">3. Conditions de victoire</h1>
 				<p>
 					Pour gagner la partie, il faut avoir détruit le chateau adverse, ou avoir détruit toutes
 					les unitées adverses. Attention, car votre adversaire essayera aussi de faire la même

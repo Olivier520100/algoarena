@@ -16,6 +16,12 @@ const tables = [
       { name: "MatchJson", type: "json" },
       { name: "Stats", type: "json" },
       { name: "file", type: "file" },
+      {
+        name: "fileChecked",
+        type: "bool",
+        notNull: true,
+        defaultValue: "false",
+      },
     ],
     revLinks: [
       { column: "User1", table: "Matches" },
@@ -28,6 +34,8 @@ const tables = [
       { name: "User1", type: "link", link: { table: "Users" } },
       { name: "User2", type: "link", link: { table: "Users" } },
       { name: "video", type: "file", file: { defaultPublicAccess: true } },
+      { name: "winner", type: "int", notNull: true, defaultValue: "0" },
+      { name: "hasVideo", type: "bool", notNull: true, defaultValue: "false" },
     ],
   },
 ] as const;
@@ -63,16 +71,16 @@ let instance: XataClient | undefined = undefined;
 import { XATA_API_KEY, XATA_BRANCH, XATA_DATABASE_URL } from '$env/static/private';
 
 export const getXataClient = () => {
-	if (instance) return instance;
+    if (instance) return instance;
 
-	instance = new XataClient({
-		// Override configuration here
-		databaseURL: XATA_DATABASE_URL,
-		apiKey: XATA_API_KEY,
-		fetch: fetch,
-		branch: XATA_BRANCH
-		// ... other configuration
-	});
+    instance = new XataClient({
+        // Override configuration here
+        databaseURL: XATA_DATABASE_URL,
+        apiKey: XATA_API_KEY,
+        fetch: fetch,
+        branch: XATA_BRANCH
+        // ... other configuration
+    });
 
-	return instance;
+    return instance;
 };

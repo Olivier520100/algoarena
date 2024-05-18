@@ -17,6 +17,10 @@ export const POST = async ({ locals, request }) => {
 		{ table: 'Users', column: 'file', record: user.id },
 		text
 	);
+	const record = await xata.db.Users.update(user.id, {
+		fileChecked: false,
+	});
+	
 
 	return new Response(true);
 };

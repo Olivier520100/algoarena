@@ -1,0 +1,18 @@
+{
+  "id": "mig_cp4gf7k2a0mp8q8v16dg",
+  "parentID": "mig_cp4g0b6nac7n4q9f4460",
+  "checksum": "1:b9afa5525f500b9f9f7509187a1c91f6f21a92b1597e5602c55fe73f4ad27ff3",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "hasVideo",
+          "type": "bool",
+          "notNull": true,
+          "defaultValue": "false"
+        },
+        "table": "Matches"
+      }
+    }
+  ]
+}
