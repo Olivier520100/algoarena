@@ -5,9 +5,6 @@ import { redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	let session = await locals.auth();
-	if (session?.user?.email) {
-	  redirect(302, '/dashboard');
-	}
 	
 
 	const users = await getXataClient()
@@ -33,6 +30,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 			elo: 700
 		});
 	}
+	if (session?.user?.email) {
+		redirect(302, '/dashboard');
+	  }
+	  
 	return {  users: users};
 };
-
