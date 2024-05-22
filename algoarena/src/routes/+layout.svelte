@@ -29,9 +29,13 @@
 	</a>
 	<div class="flex items-center gap-2">
 		<!-- <a class="btn" href="/rankings"> Rankings </a> -->
+		<a class="mr-2" href="https://github.com/Olivier520100/algoarena/tree/main/game">
+			<h1 class="text-main-black">Github</h1>
+		</a>
 		<a class="mr-2" href="/matches">
 			<h1 class="text-main-blue">Classement</h1>
 		</a>
+		
 		{#if data.user}
 			{#if data.elo}
 				<IconCrown />
