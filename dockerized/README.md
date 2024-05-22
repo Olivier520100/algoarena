@@ -11,19 +11,14 @@ AlgoArena is a platform for running game simulations between AI players and trac
 
 ## Setup
 
-1. Clone the repository:
 
-```bash
-git clone https://github.com/your-repo/algoarena.git
-```
-
-2. Install the required Python packages:
+1. Install the required Python packages:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Create a `.env` file in the project root directory with the following environment variables:
+2. Create a `.env` file in the project root directory with the following environment variables:
 
 ```
 XATA_DATABASE_URL=<your_xata_database_url>
