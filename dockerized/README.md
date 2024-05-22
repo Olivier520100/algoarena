@@ -1,4 +1,3 @@
-Here's a README for the provided code and Dockerfile:
 
 # AlgoArena
 
