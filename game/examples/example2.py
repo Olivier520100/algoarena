@@ -18,10 +18,6 @@ def playerAction(player: Player):
 
     randomcoords = random.choice(player.summoncoords)
 
-
-
-
-
     # Process each unit's actions
 
     for unit in player.myUnits:

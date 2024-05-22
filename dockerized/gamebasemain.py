@@ -11,7 +11,7 @@ from player import Player
 
 
 def nextPosition(startPosition, endPosition, availablePositionMatrix):
-
+    ##Finds the next optimal position for the unit based on start, end and the available pos
     min_value = float('inf')
     next_pos = startPosition
 
@@ -33,7 +33,7 @@ def nextPosition(startPosition, endPosition, availablePositionMatrix):
         return startPosition
   
 def dijkstra(startPosition, tempEndPosition, availablePositionMatrix):
-    
+    #Generates a heat map of closest tile to end pos
     maxval = 10000
     availablePositionMatrix[startPosition[0],startPosition[1]] = True
     weightMatrix = np.zeros(availablePositionMatrix.shape) + maxval
@@ -136,6 +136,7 @@ def dijkstra(startPosition, tempEndPosition, availablePositionMatrix):
     
     return weightMatrix
 def coordinatesRange(range):
+    #Generates adjacent tiles for a given range
     return np.vstack((np.tile(np.arange(-range,range+1,1),range*2+1),np.floor(np.arange(0,(range*2+1)**2,1) / (range*2+1)) - range)).T
     
 class Game():
