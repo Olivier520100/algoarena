@@ -332,10 +332,10 @@ def generateVideo(gameStates,gameID):
 
     print("Scaling")
 
-    zoomedImages = upscale(zoomedImages,4)
-    unZoomedImages = upscale(unZoomedImages,2)
-    minimap = upscale(minimap,2)
-    minimapframed = upscale(minimapframed,2)
+    zoomedImages = upscale(zoomedImages,4) 
+    unZoomedImages = upscale(unZoomedImages,2) 
+    minimap = upscale(minimap,2) 
+    minimapframed = upscale(minimapframed,2) 
 
     print("Editing")
 

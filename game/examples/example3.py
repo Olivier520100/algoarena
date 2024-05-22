@@ -5,7 +5,7 @@ from player import Player
 import random
 
 
-# Défini le tour du joueur
+
 def playerAction(player: Player):
 
     castlehealth = player.myBuildings[0]['health']
@@ -14,17 +14,19 @@ def playerAction(player: Player):
 
     randomcoords = player.summoncoords[random.randint(0,len(player.summoncoords)-1)]
 
+
+
     randomcoords = random.choice(player.summoncoords)
 
 
 
 
 
-    # Instructions pour chaque type d'unités
+    # Process each unit's actions
 
     for unit in player.myUnits:
-
-        if unit['type'] == 'Archer' and unit['goal'] is None:
+        
+        if unit['type'] == 'GlassCannon' and unit['goal'] is None:
 
             # Attaque tout sauf les travailleurs ennemis
 
@@ -36,9 +38,9 @@ def playerAction(player: Player):
 
                 if enemy['type'] != 'Worker': 
 
-                    distance = ((unit['coordinates'][0] - tree['coordinates'][0]) ** 2 + 
+                    distance = ((unit['coordinates'][0] - enemy['coordinates'][0]) ** 2 + 
 
-                                (unit['coordinates'][1] - tree['coordinates'][1]) ** 2) ** 0.5
+                                (unit['coordinates'][1] - enemy['coordinates'][1]) ** 2) ** 0.5
 
                     if distance < min_distance:
 
@@ -54,30 +56,28 @@ def playerAction(player: Player):
 
                 return Request(unit,player.enemyBuildings[0])
 
-        if unit['type'] == 'Melee' and unit['goal'] is None:
 
-            # Attaque les travailleurs ennemis uniquement
+        if unit['type'] == 'Tank' and unit['goal'] is None:
 
-            closest_enemy = None
+            closest_tree = None
 
             min_distance = float('inf')
 
-            for enemy in player.enemyUnits:
+            for tree in player.enemyUnits:
 
-                if unit['type'] == 'Worker': 
+                distance = ((unit['coordinates'][0] - tree['coordinates'][0]) ** 2 + 
 
-                    distance = ((unit['coordinates'][0] - tree['coordinates'][0]) ** 2 + 
+                            (unit['coordinates'][1] - tree['coordinates'][1]) ** 2) ** 0.5
 
-                                (unit['coordinates'][1] - tree['coordinates'][1]) ** 2) ** 0.5
+                if distance < min_distance:
 
-                    if distance < min_distance:
+                    min_distance = distance
 
-                        min_distance = distance
-
-                        closest_enemy = enemy
+                    closest_tree = tree
 
 
-            if closest_enemy:
+
+            if closest_tree:
 
                 return Request(unit, closest_tree)
 
@@ -87,9 +87,11 @@ def playerAction(player: Player):
 
 
 
+
+
         if unit['type'] == 'Worker' and unit['goal'] is None:
 
-            # Cherche l'arbre le plus proche à collecter
+            # Find the closest tree to gather from
 
             closest_tree = None
 
@@ -114,20 +116,18 @@ def playerAction(player: Player):
                 return Request(unit, closest_tree)
 
                 
-    # Instructions pour décider quel type d'unité produire
-    if player.wood <= 60:
+
+    if player.wood <= 80:
 
         return Request(player.myBuildings[0], {"coordinates": randomcoords, "type": "Worker"})
-
-    elif any(unit['type'] == 'Melee' in player.enemyUnits) or any(unit['type'] == 'Archer' in player.enemyUnits):
+    
+    elif any([unit for unit in player.enemyUnits if unit['type'] != 'Worker']):
 
         # produit des archers seulement s'il y a des unités de combat dans l'équipe adverse
     
-        return Request(player.myBuildings[0], {"coordinates": randomcoords, "type": "Archer"})
-    
-    elif len([unit for unit in player.enemyUnits if unit['type'] == 'Worker']) > len([unit for unit in player.myUnits if unit['type'] == 'Melee']):
+        return Request(player.myBuildings[0], {"coordinates": randomcoords, "type": "GlassCannon"})
 
-        # produit des mélées seulement s'il y a des travailleurs dans l'équipe adverse
-        
-        return Request(player.myBuildings[0], {"coordinates": randomcoords, "type": "Melee"})
+    else:
+
+        return Request(player.myBuildings[0], {"coordinates": randomcoords, "type": "Tank"})
 

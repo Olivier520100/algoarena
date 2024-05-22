@@ -26,7 +26,7 @@ def playerAction(player: Player):
 
     for unit in player.myUnits:
 
-        if unit['type'] == 'Melee' and unit['goal'] is None:
+        if unit['type'] == 'Melee' or unit['type'] == 'Archer' and unit['goal'] is None:
 
             # Target the nearest enemy worker for Melee units without a goal
 
@@ -88,11 +88,17 @@ def playerAction(player: Player):
 
                 
 
-    if player.wood <= 80:
+    if len([unit for unit in player.enemyUnits if unit['type'] == 'Worker']) < 5:
 
         return Request(player.myBuildings[0], {"coordinates": randomcoords, "type": "Worker"})
 
     else:
 
-        return Request(player.myBuildings[0], {"coordinates": randomcoords, "type": "Melee"})
+        # Genere au hasard un archer ou un melee
+        random_number = random.randint(0,1)
+
+        if random_number is 1:
+            return Request(player.myBuildings[0], {"coordinates": randomcoords, "type": "Archer"})
+        else:
+            return Request(player.myBuildings[0], {"coordinates": randomcoords, "type": "Melee"})
 

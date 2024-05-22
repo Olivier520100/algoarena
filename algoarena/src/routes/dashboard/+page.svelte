@@ -55,13 +55,7 @@
 	import { browser } from '$app/environment';
 
 	let isCode = true;
-	function setPage() {
-		if (isCode) {
-			isCode = false;
-		} else {
-			isCode = true;
-		}
-	}
+
 
 	// Set interval to refresh users data every 0.5 seconds
 </script>
@@ -71,20 +65,6 @@
 </main>
 
 <div class="relative z-4">
-	<div class="absolute left-0 top-4 flex flex-col">
-		<button
-			class="card"
-			on:click={() => {
-				setPage();
-			}}>Code</button
-		>
-		<button
-			class="card"
-			on:click={() => {
-				setPage();
-			}}>Manuel</button
-		>
-	</div>
 	{#if isCode}
 		<div class="mt-10 mx-auto text-center">
 			<h1 class="h1">Veuillez coder ici ou upload votre AI</h1>
