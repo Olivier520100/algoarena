@@ -1,44 +1,45 @@
+
 # AlgoArena
 
-This folder contains a real-time strategy (RTS) game simulation with AI players. The game involves two teams battling against each other on a map with different terrain types, resources, and units.
+Ce dossier contient une simulation de jeu de stratégie en temps réel (RTS) avec des joueurs IA. Le jeu implique deux équipes qui s'affrontent sur une carte avec différents types de terrain, de ressources et d'unités.
 
-## Game Overview
+## Aperçu du jeu
 
-The game is played on a 2D map with various terrain types (water, sand, grass, stone, bridges). Each team starts with a castle and some initial resources (wood and stone). Players can summon different types of units (workers, melee, tanks, archers, glass cannons) and buildings (castles) using resources. Units have different attributes like health, damage, speed, and range. The objective is to destroy the opponent's castle while defending your own.
+Le jeu se déroule sur une carte 2D avec divers types de terrain (eau, sable, herbe, pierre, ponts). Chaque équipe commence avec un château et quelques ressources initiales (bois et pierre). Les joueurs peuvent invoquer différents types d'unités (ouvriers, mêlée, chars, archers, canons de verre) et de bâtiments (châteaux) en utilisant des ressources. Les unités ont différents attributs comme la santé, les dégâts, la vitesse et la portée. L'objectif est de détruire le château de l'adversaire tout en défendant le sien.
 
-## Code Structure
+## Structure du code
 
-The code is written in Python and uses NumPy, Pandas, and OpenCV libraries for data manipulation, image processing, and video generation.
+Le code est écrit en Python et utilise les bibliothèques NumPy, Pandas et OpenCV pour la manipulation de données, le traitement d'images et la génération de vidéos.
 
-- `videogeneration.py`: Contains functions for generating sprites, rendering the game map, and creating a video from the game frames.
-- `gamebasemain.py`: Implements the main game logic, including map generation, unit movement, combat, resource gathering, and game loop.
-- `gameRequests.py`: Defines the request class for handling player actions.
-- `player.py`: Represents a player's state, including units, buildings, resources, and enemy information.
-- `run.py`: Entry point for running the game simulation.
+- `videogeneration.py` : Contient des fonctions pour générer des sprites, rendre la carte du jeu et créer une vidéo à partir des images du jeu.
+- `gamebasemain.py` : Implémente la logique principale du jeu, y compris la génération de la carte, le mouvement des unités, les combats, la collecte de ressources et la boucle de jeu.
+- `gameRequests.py` : Définit la classe Request pour gérer les actions des joueurs.
+- `player.py` : Représente l'état d'un joueur, y compris les unités, les bâtiments, les ressources et les informations sur l'ennemi.
+- `run.py` : Point d'entrée pour exécuter la simulation de jeu.
 
-Additionally, there are separate files for the AI players (`player1.py` and `player2.py`) where you can implement your AI strategies.
+De plus, il y a des fichiers séparés pour les joueurs IA (`player1.py` et `player2.py`) où vous pouvez implémenter vos stratégies d'IA.
 
-## Usage
+## Utilisation
 
-1. Install the required libraries (NumPy, Pandas, OpenCV) using `pip install -r requirements.txt`.
-2. Run `run.py` to start the game simulation.
-3. The game will generate a video file (`videos/gameID1_gameID2.mp4`) showing the simulation.
+1. Installez les bibliothèques requises (NumPy, Pandas, OpenCV) en utilisant `pip install -r requirements.txt`.
+2. Exécutez `run.py` pour démarrer la simulation de jeu.
+3. Le jeu générera un fichier vidéo (`videos/gameID1_gameID2.mp4`) montrant la simulation.
 
-## AI Implementation
+## Implémentation de l'IA
 
-In AlgoArena, players can implement their AI strategies by modifying the `playerAction` function in the `player1.py` and `player2.py` files. The `playerAction` function takes a `Player` object as input and should return a `Request` object with the desired action.
+Dans AlgoArena, les joueurs peuvent implémenter leurs stratégies d'IA en modifiant la fonction `playerAction` dans les fichiers `player1.py` et `player2.py`. La fonction `playerAction` prend un objet `Player` en entrée et doit renvoyer un objet `Request` avec l'action souhaitée.
 
-## Player Object
+## Objet Player
 
-The `Player` object contains information about your units, buildings, resources, and the game state. It has the following properties:
+L'objet `Player` contient des informations sur vos unités, bâtiments, ressources et l'état du jeu. Il a les propriétés suivantes :
 
-- `myUnits`: A list of dictionaries representing your units on the map. Each dictionary has the following keys:
-  - `type`: The type of unit (e.g., "Worker", "Melee", "Archer", "Tank", "GlassCannon").
-  - `health`: The current health of the unit.
-  - `coordinates`: A list containing the unit's x and y coordinates on the map (e.g., `[5, 10]`).
-  - `goal`: This can be either a dictionary representing the unit's target (for attacking or gathering resources) or a list of coordinates for movement.
+- `myUnits` : Une liste de dictionnaires représentant vos unités sur la carte. Chaque dictionnaire a les clés suivantes :
+  - `type` : Le type d'unité (par exemple, "Worker", "Melee", "Archer", "Tank", "GlassCannon").
+  - `health` : La santé actuelle de l'unité.
+  - `coordinates` : Une liste contenant les coordonnées x et y de l'unité sur la carte (par exemple, `[5, 10]`).
+  - `goal` : Peut être soit un dictionnaire représentant la cible de l'unité (pour attaquer ou collecter des ressources), soit une liste de coordonnées pour le mouvement.
 
-  Example `myUnits` entry:
+  Exemple d'entrée `myUnits` :
   ```python
   {
     "type": "Melee",
@@ -52,12 +53,12 @@ The `Player` object contains information about your units, buildings, resources,
   }
   ```
 
-- `myBuildings`: A list of dictionaries representing your buildings on the map. Each dictionary has the following keys:
-  - `type`: The type of building (e.g., "Castle").
-  - `health`: The current health of the building.
-  - `coordinates`: A list containing the building's x and y coordinates on the map.
+- `myBuildings` : Une liste de dictionnaires représentant vos bâtiments sur la carte. Chaque dictionnaire a les clés suivantes :
+  - `type` : Le type de bâtiment (par exemple, "Castle").
+  - `health` : La santé actuelle du bâtiment.
+  - `coordinates` : Une liste contenant les coordonnées x et y du bâtiment sur la carte.
 
-  Example `myBuildings` entry:
+  Exemple d'entrée `myBuildings` :
   ```python
   {
     "type": "Castle",
@@ -66,12 +67,12 @@ The `Player` object contains information about your units, buildings, resources,
   }
   ```
 
-- `trees`: A list of dictionaries representing the trees (resources) on the map. Each dictionary has the following keys:
-  - `type`: The type of resource (e.g., "Tree").
-  - `health`: The current health of the resource (determines how much can be gathered).
-  - `coordinates`: A list containing the resource's x and y coordinates on the map.
+- `trees` : Une liste de dictionnaires représentant les arbres (ressources) sur la carte. Chaque dictionnaire a les clés suivantes :
+  - `type` : Le type de ressource (par exemple, "Tree").
+  - `health` : La santé actuelle de la ressource (détermine combien peut être collecté).
+  - `coordinates` : Une liste contenant les coordonnées x et y de la ressource sur la carte.
 
-  Example `trees` entry:
+  Exemple d'entrée `trees` :
   ```python
   {
     "type": "Tree",
@@ -80,19 +81,19 @@ The `Player` object contains information about your units, buildings, resources,
   }
   ```
 
-- `enemyUnits`: A list of dictionaries representing the enemy's units on the map. The structure is the same as `myUnits`.
-- `enemyBuildings`: A list of dictionaries representing the enemy's buildings on the map. The structure is the same as `myBuildings`.
-- `wood`: The amount of wood resources you currently have.
-- `stone`: The amount of stone resources you currently have.
-- `summoncoords`: A list of coordinate lists where you can summon new units (e.g., `[[5, 8], [7, 10], ...]`).
+- `enemyUnits` : Une liste de dictionnaires représentant les unités ennemies sur la carte. La structure est la même que `myUnits`.
+- `enemyBuildings` : Une liste de dictionnaires représentant les bâtiments ennemis sur la carte. La structure est la même que `myBuildings`.
+- `wood` : La quantité de ressources en bois que vous avez actuellement.
+- `stone` : La quantité de ressources en pierre que vous avez actuellement.
+- `summoncoords` : Une liste de listes de coordonnées où vous pouvez invoquer de nouvelles unités (par exemple, `[[5, 8], [7, 10], ...]`).
 
-## Request Object
+## Objet Request
 
-The `Request` object is used to specify the action you want to take in the game. It has two properties:
+L'objet `Request` est utilisé pour spécifier l'action que vous voulez effectuer dans le jeu. Il a deux propriétés :
 
-- `gameObjectDict`: A dictionary representing the game object (unit or building) you want to act with. This dictionary should match one of the dictionaries in `myUnits` or `myBuildings`.
+- `gameObjectDict` : Un dictionnaire représentant l'objet de jeu (unité ou bâtiment) avec lequel vous voulez agir. Ce dictionnaire doit correspondre à l'un des dictionnaires dans `myUnits` ou `myBuildings`.
 
-  Example `gameObjectDict`:
+  Exemple de `gameObjectDict` :
   ```python
   {
     "type": "Worker",
@@ -102,17 +103,17 @@ The `Request` object is used to specify the action you want to take in the game.
   }
   ```
 
-- `gameRequestDict`: A dictionary representing the request you want to make for the game object. This dictionary can have different structures depending on the type of request:
+- `gameRequestDict` : Un dictionnaire représentant la requête que vous voulez faire pour l'objet de jeu. Ce dictionnaire peut avoir différentes structures selon le type de requête :
 
-  - Movement request:
+  - Requête de mouvement :
     ```python
     {
       "coordinates": [7, 12]
     }
     ```
-    This request will move the specified unit or building to the given coordinates.
+    Cette requête déplacera l'unité ou le bâtiment spécifié vers les coordonnées données.
 
-  - Attack request:
+  - Requête d'attaque :
     ```python
     {
       "type": "Melee",
@@ -120,9 +121,9 @@ The `Request` object is used to specify the action you want to take in the game.
       "coordinates": [6, 9]
     }
     ```
-    This request will make the specified unit or building attack the enemy unit or building at the given coordinates.
+    Cette requête fera que l'unité ou le bâtiment spécifié attaquera l'unité ou le bâtiment ennemi aux coordonnées données.
 
-  - Resource gathering request:
+  - Requête de collecte de ressources :
     ```python
     {
       "type": "Tree",
@@ -130,28 +131,14 @@ The `Request` object is used to specify the action you want to take in the game.
       "coordinates": [10, 3]
     }
     ```
-    This request will make the specified unit gather resources from the tree at the given coordinates.
-
-  - Unit summoning request:
+    Cette requête fera que l'unité spécifiée collectera des ressources de l'arbre aux coordonnées données.
+-   Requête d'invocation d'unité :
     ```python
     {
-      "coordinates": [4, 6],
+      "coordinates": [4, 6], 
       "type": "Archer"
     }
     ```
-    This request will summon a new Archer unit at the specified coordinates (if you have enough resources).
+    Cette requête invoquera une nouvelle unité Archer aux coordonnées spécifiées (si vous avez suffisamment de ressources).
 
-By combining the `gameObjectDict` and `gameRequestDict`, you can specify various actions for your units and buildings, such as moving, attacking, gathering resources, or summoning new units.
-
-## Modifying the AI Strategy
-
-To modify the AI strategy, you can edit the `playerAction` function in `player1.py` or `player2.py`. Here are some ideas for improvements:
-
-1. **Resource Management**: Implement logic to balance the production of different unit types based on available resources and the game state.
-2. **Unit Positioning**: Develop strategies for positioning units effectively, considering terrain, choke points, and defensive formations.
-3. **Building Placement**: Decide where to place buildings strategically, considering resource locations and defensive positions.
-4. **Scouting**: Incorporate scouting techniques to gather information about the enemy's units and buildings.
-5. **Tactical Decisions**: Implement decision-making logic for when to attack, defend, or retreat based on the current game state.
-6. **Advanced Pathfinding**: Improve unit movement by implementing advanced pathfinding algorithms that consider terrain, obstacles, and enemy units.
-
-Remember, the more sophisticated your AI strategy, the better your chances of winning against other players in AlgoArena.
+En combinant `gameObjectDict` et `gameRequestDict`, vous pouvez spécifier diverses actions pour vos unités et bâtiments, comme se déplacer, attaquer, collecter des ressources ou invoquer de nouvelles unités.

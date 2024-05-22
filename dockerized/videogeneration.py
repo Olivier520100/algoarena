@@ -1,14 +1,11 @@
 import math
-from matplotlib import pyplot as plt
-from matplotlib.widgets import Slider
 import numpy as np
 import cv2
 from PIL import Image
 import random
 
-np.set_printoptions(edgeitems=30)
 
-
+## BASE COLORS AND SPRITE LOCATIONS
 
 terrain_colors = {
         0: np.array([0, 0, 0]),          # fog
@@ -71,6 +68,8 @@ team2buildingsprites = {
 }
 
 def getMapImageWithSprites(maps):
+
+    ##GENERATES IMAGES OF EACH FRAME WITH SPRITES
         
     terrainMap = maps[0]
     ressourceMap = maps[1]
@@ -81,12 +80,14 @@ def getMapImageWithSprites(maps):
 
     imagearray = np.zeros([terrainMap.shape[0]*10, terrainMap.shape[1]*10, 3])
 
+    #CREATES BASE LAYERS WITH TERRAIN SPRITES
 
     for currenty in range((terrainMap).shape[0]):
         for currentx in range((terrainMap).shape[1]):
             if terrainMap[currenty, currentx] in terrainsprites:
                 imagearray[currenty*10:currenty*10+10, currentx*10:currentx*10+10, :] = terrainsprites[terrainMap[currenty, currentx]]
 
+    #Adds trees, units sprites over the terrain
 
     for currenty in range((terrainMap).shape[0]):
         for currentx in range((terrainMap).shape[1]):
@@ -148,6 +149,8 @@ def getMapImageWithSprites(maps):
 
 
 def getMapSimpleColors(maps):
+
+    #Generates with simple colors
         
     terrainMap = maps[0]
     ressourceMap = maps[1]
@@ -187,6 +190,8 @@ def getMapSimpleColors(maps):
     return (imagearray.astype('uint8'))
 
 def upscale(imageList, upscalefactor):
+
+    #Upscales the image
     newImageList = []
     for image in imageList:
         upscaled_image = np.repeat(np.repeat(image, upscalefactor, axis=0), upscalefactor, axis=1)
@@ -195,9 +200,11 @@ def upscale(imageList, upscalefactor):
 
 def zoomedInGeneration(gameStates, zoomlen, zoomsize, unZoomedImages, minimap):
 
+    #Generates the zoomed based on decayed most movement of that frame
+
     decaylist = []
 
-
+    #Calcultes movmenet of that frame
     for state in gameStates:
 
         team1UnitMap = state[2]
@@ -214,6 +221,8 @@ def zoomedInGeneration(gameStates, zoomlen, zoomsize, unZoomedImages, minimap):
 
     concactlist = []
     index = 0
+
+    ## Combines for the frame length
     while index < len(decaylist):
 
         lowindex = index
@@ -227,6 +236,8 @@ def zoomedInGeneration(gameStates, zoomlen, zoomsize, unZoomedImages, minimap):
     currenty = 0
     currentx = 0
     bestpos = []
+
+    #finds the best frame using a sliding window
 
     for state in concactlist:
         greatestsum = 0
@@ -250,7 +261,7 @@ def zoomedInGeneration(gameStates, zoomlen, zoomsize, unZoomedImages, minimap):
                 currentx=0
         bestpos.append(greatestcord)
 
-
+    # Zooms in on main map
     resultImageList = []
     index = 0
 
@@ -265,7 +276,7 @@ def zoomedInGeneration(gameStates, zoomlen, zoomsize, unZoomedImages, minimap):
 
     newminimap = []
     
-    ## adding frame
+    ## adding frame to minimap
     index = 0
     for images in minimap:
 
@@ -285,18 +296,6 @@ def zoomedInGeneration(gameStates, zoomlen, zoomsize, unZoomedImages, minimap):
 
     
     return resultImageList, newminimap
-        
-
-def generateFrame(size, thickness,color):
-
-    frame = np.zeros([size[0],size[1],3])
-
-    frame[:thickness,:,:] = color
-    frame[:,:thickness,:] = color
-    frame[:,size[1]-thickness:,:] = color
-    frame[size[0]-thickness:,:,:] = color
-    
-    return frame
 
 
 
