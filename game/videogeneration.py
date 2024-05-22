@@ -1,8 +1,12 @@
+import math
 from matplotlib import pyplot as plt
 from matplotlib.widgets import Slider
 import numpy as np
 import cv2
 from PIL import Image
+import random
+
+np.set_printoptions(edgeitems=30)
 
 
 
@@ -18,8 +22,8 @@ terrain_colors = {
         8: np.array([200, 200, 200]),    # stone4
         9: np.array([143, 101, 0]),       # bridge
         10: np.array([255,0,0]), #team1
-        11: np.array([255,192,203]),
-        12: np.array([41, 107, 42])
+        11: np.array([118,66,138]), #team 2
+        12: np.array([41, 107, 42]) # tree
     }
 
 terrainsprites = {
@@ -82,8 +86,6 @@ def getMapImageWithSprites(maps):
         for currentx in range((terrainMap).shape[1]):
             if terrainMap[currenty, currentx] in terrainsprites:
                 imagearray[currenty*10:currenty*10+10, currentx*10:currentx*10+10, :] = terrainsprites[terrainMap[currenty, currentx]]
-            elif terrainMap[currenty, currentx] in terrain_colors:
-                imagearray[currenty*10:currenty*10+10, currentx*10:currentx*10+10, :] = terrain_colors[terrainMap[currenty, currentx]]
 
 
     for currenty in range((terrainMap).shape[0]):
@@ -143,24 +145,268 @@ def getMapImageWithSprites(maps):
 
     return (imagearray.astype('uint8'))
 
-def showImageList(mapList,gameID):
 
-    image_list = []
-    for frames in mapList:
-        image_list.append(getMapImageWithSprites(frames))
+
+def getMapSimpleColors(maps):
         
+    terrainMap = maps[0]
+    ressourceMap = maps[1]
+    team1UnitMap = maps[2]
+    team1BuildingMap = maps[3]
+    team2UnitMap = maps[4]
+    team2BuildingMap = maps[5]
+
+    imagearray = np.zeros([terrainMap.shape[0], terrainMap.shape[1], 3])
+
+
+    for currenty in range((terrainMap).shape[0]):
+        for currentx in range((terrainMap).shape[1]):
+            if terrainMap[currenty, currentx] in terrain_colors:
+                imagearray[currenty, currentx, :] = terrain_colors[terrainMap[currenty, currentx]]
+
+
+    for currenty in range((terrainMap).shape[0]):
+        for currentx in range((terrainMap).shape[1]):
+
+            if ressourceMap[currenty, currentx] in ressourcesprites:
+                imagearray[currenty, currentx, :] = terrain_colors[12]
+
+            if team1UnitMap[currenty, currentx] in team1unitsprites:
+                imagearray[currenty, currentx, :] = terrain_colors[10]
+
+            if team1BuildingMap[currenty, currentx] in team1buildingsprites:
+                imagearray[currenty:currenty+7, currentx:currentx+7, :] = terrain_colors[10]
+
+            if team2UnitMap[currenty, currentx] in team2unitsprites:
+                imagearray[currenty, currentx, :] = terrain_colors[11]
+
+
+            if team2BuildingMap[currenty, currentx] in team2buildingsprites:
+                imagearray[currenty:currenty+7, currentx:currentx+7, :] = terrain_colors[11]
+
+    return (imagearray.astype('uint8'))
+
+def upscale(imageList, upscalefactor):
+    newImageList = []
+    for image in imageList:
+        upscaled_image = np.repeat(np.repeat(image, upscalefactor, axis=0), upscalefactor, axis=1)
+        newImageList.append(upscaled_image)
+    return newImageList
+
+def zoomedInGeneration(gameStates, zoomlen, zoomsize, unZoomedImages, minimap):
+
+    decaylist = []
+
+
+    for state in gameStates:
+
+        team1UnitMap = state[2]
+        team2UnitMap = state[4]
+        combinedMap = team1UnitMap + team2UnitMap
+
+        combinedMap[combinedMap != 0] = 1
+
+        if decaylist:
+            combinedMap = (decaylist[-1] -0.1) + combinedMap
+            combinedMap = np.clip(combinedMap, 0, 1)
+        
+        decaylist.append(combinedMap)
+
+    concactlist = []
+    index = 0
+    while index < len(decaylist):
+
+        lowindex = index
+        highindex = min((index+zoomlen),len(decaylist))
+        concactlist.append(np.sum(np.stack(decaylist[lowindex:highindex]),axis=0))
+        index+=zoomlen
+
+
+    camheight = zoomsize[0]
+    camwidth = zoomsize[1]
+    currenty = 0
+    currentx = 0
+    bestpos = []
+
+    for state in concactlist:
+        greatestsum = 0
+        greatestcord = [-1,-1]
+        currenty = 0
+        currentx = 0
+        while camheight+currenty < concactlist[0].shape[0] and camwidth+currentx < concactlist[0].shape[1]:
+            lowy = currenty
+            highy = currenty+camheight
+            lowx = currentx
+            highx = currentx+camwidth
+            
+            currentsum = np.sum(state[lowy:highy, lowx:highx])
+            if currentsum > greatestsum:
+                greatestsum = currentsum
+                greatestcord = [currenty,currentx]
+            
+            currentx+=1
+            if camwidth+currentx >= concactlist[0].shape[1]:
+                currenty+=1
+                currentx=0
+        bestpos.append(greatestcord)
+
+
+    resultImageList = []
+    index = 0
+
+    for images in unZoomedImages:
+        bestposcounter = math.floor(index/zoomlen)
+        lowy = bestpos[bestposcounter][0]*10
+        highy = lowy+camheight*10
+        lowx = bestpos[bestposcounter][1]*10
+        highx =lowx+camwidth*10
+        resultImageList.append(images[lowy:highy, lowx:highx])
+        index+=1
+
+    newminimap = []
+    
+    ## adding frame
+    index = 0
+    for images in minimap:
+
+        
+        bestposcounter = math.floor(index/zoomlen)
+        lowy = bestpos[bestposcounter][0]
+        highy = lowy+camheight
+        lowx = bestpos[bestposcounter][1]
+        highx =lowx+camwidth
+        images[lowy:highy,lowx,:] = [0,0,0]
+        images[lowy:highy,highx,:] = [0,0,0]
+        images[lowy,lowx:highx,:] = [0,0,0]
+        images[highy,lowx:highx,:] = [0,0,0]
+    
+        newminimap.append(images)
+        index+=1
+
+    
+    return resultImageList, newminimap
+        
+
+def generateFrame(size, thickness,color):
+
+    frame = np.zeros([size[0],size[1],3])
+
+    frame[:thickness,:,:] = color
+    frame[:,:thickness,:] = color
+    frame[:,size[1]-thickness:,:] = color
+    frame[size[0]-thickness:,:,:] = color
+    
+    return frame
+
+
+
+
+def generateVideo(gameStates,gameID):
+
+
+    ## Generating video components
+
+    ## Time for each zoom
+    zoomlen = 24*8
+
+    ## Area zoom 
+    zoomsize = [18,32]
+
+    #Zoomed states
+
+    unZoomedImages = []
+    zoomedImages = []
+    minimap = []
+
+    #Generating images
+    print("Generating")
+
+    for frames in gameStates:
+        unZoomedImages.append(getMapImageWithSprites(frames))
+        minimap.append(getMapSimpleColors(frames))
+    ##Zooming 
+
+    print("Zooming")
+
+    zoomedImages, minimapframed = zoomedInGeneration(gameStates,zoomlen,zoomsize,unZoomedImages,minimap)
+
+    print("Scaling")
+
+    zoomedImages = upscale(zoomedImages,4)
+    unZoomedImages = upscale(unZoomedImages,2)
+    minimap = upscale(minimap,2)
+    minimapframed = upscale(minimapframed,2)
+
+    print("Editing")
+
+
+    zoomlist = [False]
+
+    zoomtimers = math.ceil(len(unZoomedImages)/zoomlen)
+    while len(zoomlist) < zoomtimers - 1:
+        if random.randint(0, 1) == 1:
+            zoomlist.append(True)
+            if len(zoomlist) < zoomtimers - 1:
+                zoomlist.append(False)
+        else:
+            zoomlist.append(False)
+
+    zoomlist.append(False)
+
+
+    print(zoomedImages[0].shape, unZoomedImages[0].shape, minimapframed[0].shape, minimap[0].shape)
+
+    coordinatezoomedin = [int((unZoomedImages[0].shape[0] - zoomedImages[0].shape[0])/2),int((unZoomedImages[0].shape[1] - zoomedImages[0].shape[1])/2)]
+    index = 0
+    videosegments = []
+    print(zoomlist)
+    mainborder = 5
+
+    while index < len(zoomedImages):
+        
+
+        newimage = unZoomedImages[index]
+        bestposcounter = math.floor(index/zoomlen)
+
+        if zoomlist[bestposcounter] == True:
+            lowy = coordinatezoomedin[0]
+            lowx = coordinatezoomedin[1]
+            highy = lowy+zoomedImages[index].shape[0]
+            highx = lowx+zoomedImages[index].shape[1]
+            newimage[lowy-mainborder:highy+mainborder, lowx-mainborder:highx+mainborder, :] = [0,0,0]
+            newimage[lowy:highy, lowx:highx, :] = zoomedImages[index]
+
+        videosegments.append(newimage)
+        index+=1
+
+        
+
+
+
+
+    print("Creating Video")
+
+
     fourcc = cv2.VideoWriter_fourcc(*'HVEC')
     output_file = f'videos/{gameID}.mp4'
+    
+    
+    
     frame_rate = 24
-    height, width, layers = image_list[0].shape
+
+    # image_list = upscale(framelist,2)
+    height, width, layers = videosegments[0].shape
+
     video = cv2.VideoWriter(output_file, fourcc, frame_rate, (width, height))
 
-    for image in image_list:
+    for image in videosegments:
         frame = cv2.cvtColor(image.astype('uint8'), cv2.COLOR_RGB2BGR)
         video.write(frame)
 
     video.release()
 
     print("Video saved as", output_file)
+
+
 
     

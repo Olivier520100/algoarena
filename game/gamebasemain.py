@@ -194,7 +194,7 @@ class Game():
             self.turn +=1
             
         print("Finished Simulation")
-        videogeneration.showImageList(self.frames, gameId)    
+        videogeneration.generateVideo(self.frames, gameId)    
         if self.turn == self.maxturns:
             if self.team1.buildings[0].health > self.team2.buildings[0].health:
                 return (1,0)
