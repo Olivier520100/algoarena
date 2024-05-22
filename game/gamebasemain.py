@@ -418,7 +418,7 @@ class Game():
         self.updatePlayerInfo()
         requestPlayer1 = player1.playerAction(self.player1)
         requestPlayer2 = player2.playerAction(self.player2)
-        unitTypes = {"Worker", "Melee"}
+        unitTypes = {"Worker", "Melee", "Archer", "Tank", "GlassCannon"}
         buildingType = {"Castle"}
         ressourceType = {"Tree"}
         if not requestPlayer1.gameObjectDict == None:
