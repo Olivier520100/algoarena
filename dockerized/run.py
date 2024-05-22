@@ -21,6 +21,8 @@ def deny_network_connections():
     deny_connects = True
     sys.addaudithook(audit_hook_deny_connects)
 
+## Elo formula
+
 def expectedScore(rA, rB):
     return 1/(1+10**((rB-rA)/400)),1/(1+10**((rA-rB)/400))
 
@@ -31,12 +33,17 @@ def finalElo(rA, rB,result):
 
     return round(rA + 400*(resultuser1-expectedrateuser1)),round(rB + 400*(resultuser2-expectedrateuser2))
 
+
+#Loading environement variables
 load_dotenv(".env")
 db_url_env = os.environ.get("XATA_DATABASE_URL")
 api_key_env = os.environ.get("XATA_API_KEY")
 xata = XataClient(db_url=db_url_env,api_key=api_key_env)
 
+#While true to run matches
+
 while True:
+    #Gets all users and elo 
     data = xata.data().query("Users", {
     "columns": [
         "email",
@@ -44,7 +51,7 @@ while True:
         "elo"
     ]
     })
-
+    #chooses 2 players
     users = (data['records'])
 
     user1 = random.randint(0,len(users)-1)
@@ -72,7 +79,7 @@ while True:
             exists = True
             gameid = datapoint["id"]
             break
-            
+    #verifies if match exists
     if exists:
         print(gameid)
     else:
@@ -84,7 +91,8 @@ while True:
         
         
         print(gameid)
-        
+    
+    #downloads the user files
     file1 = xata.records().get("Users", user1id, columns=[
         "file.name",
         "file.base64Content"
@@ -101,7 +109,7 @@ while True:
 
     file2content = file2["file"]["base64Content"]
     file2contentdecode = base64.standard_b64decode(file1content).decode('utf-8')
-
+    #Puts them in player1 and player 2 files 
     f = open("player1.py", "w")
     f.write((file1contentdecode))
     f.close()
@@ -111,6 +119,8 @@ while True:
     f.write((file2contentdecode))
     f.close()
 
+    #closes all possible internet connections
+
     deny_network_connections()
     try:
         import gamebasemain
@@ -119,7 +129,7 @@ while True:
     finally:
         # Restore network connections
         deny_connects = False
-
+    #updates db and uploads video
     dbresult = 0
     if (result[0] + result[1]) >=2:
         result = (0.5,0.5)

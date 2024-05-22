@@ -11,7 +11,7 @@ from player import Player
 
 
 def nextPosition(startPosition, endPosition, availablePositionMatrix):
-
+    ##Finds the next optimal position for the unit based on start, end and the available pos
     min_value = float('inf')
     next_pos = startPosition
 
@@ -33,7 +33,7 @@ def nextPosition(startPosition, endPosition, availablePositionMatrix):
         return startPosition
   
 def dijkstra(startPosition, tempEndPosition, availablePositionMatrix):
-    
+    #Generates a heat map of closest tile to end pos
     maxval = 10000
     availablePositionMatrix[startPosition[0],startPosition[1]] = True
     weightMatrix = np.zeros(availablePositionMatrix.shape) + maxval
@@ -136,13 +136,17 @@ def dijkstra(startPosition, tempEndPosition, availablePositionMatrix):
     
     return weightMatrix
 def coordinatesRange(range):
+    #Generates adjacent tiles for a given range
     return np.vstack((np.tile(np.arange(-range,range+1,1),range*2+1),np.floor(np.arange(0,(range*2+1)**2,1) / (range*2+1)) - range)).T
     
+
+#Class that contains most game logic
+
 class Game():
 
     def __init__(self):
 
-        
+        #inititalize game logic and base max turns, current turn, the list of all the frames that will be used to generate the video and the player objects
         self.gameOutcome = (1,1)
         self.maxturns = 10
         self.turn = 0 
@@ -150,11 +154,15 @@ class Game():
         self.player1 = Player()
         self.player2 = Player()
 
+
+        #Chooses the map
         a = pandas.read_csv("maps.csv")
         mapnumber = 2
         self.terrainMap = np.load(a["Filename"].iloc[mapnumber-1])
         filename = a["Filename"].iloc[mapnumber-1]
         self.terrainMap = np.load(filename)
+
+        #Initializes base game info of the map
         self.mapsizey = (self.terrainMap).shape[0]
         self.mapsizex = (self.terrainMap).shape[1]
 
@@ -165,12 +173,16 @@ class Game():
         self.waterMapCreation()
         self.mineableMapCreation()
 
+
+        #Creates trees and player objects
         self.team1 = Team(self.team1startcoords)
         self.team2 = Team(self.team2startcoords)
 
         self.treeGeneration()
     
     def gameRun(self, gameId, maxturn):
+
+        # Runs the simulation of everyturn
         self.maxturns = maxturn
         
         print("Started Simulation")
@@ -194,7 +206,9 @@ class Game():
             self.turn +=1
             
         print("Finished Simulation")
+        #Sends info to the video generations
         videogeneration.generateVideo(self.frames, gameId)    
+        #Returns the game outcome
         if self.turn == self.maxturns:
             if self.team1.buildings[0].health > self.team2.buildings[0].health:
                 return (1,0)
@@ -209,6 +223,8 @@ class Game():
 
           
     def updatePlayerInfo(self):
+
+        ## Updates what info the user can read in the from the player class in the player1/2.py
         self.player1.reset()
         for units in self.team1.units:
             
@@ -317,6 +333,8 @@ class Game():
                 "coordinates": trees.coordinates
             })
     def walkableMapCreation(self,initialtile):
+
+        #finds what area is walkable using modified djstras algorithm
         walkableTerrainTemp = (self.terrainMap == 2) | (self.terrainMap == 3) | (self.terrainMap == 4) | (self.terrainMap == 9)
         self.walkableTerrain = np.zeros([self.mapsizey, self.mapsizex]) == 1
         self.walkableTerrain[initialtile[0],initialtile[1]] = True
@@ -357,8 +375,10 @@ class Game():
     def mineableMapCreation(self):
         self.rockTerrain = (self.terrainMap == 5) | (self.terrainMap == 6) | (self.terrainMap == 7) | (self.terrainMap == 8)
     def goListCreation(self):
+        #Creates a list of all the game objects
         self.goList = self.team1.buildings+self.team1.units+self.trees+self.team2.buildings+self.team2.units
     def accesibleMapCreation(self):
+        #finds what is accessbile by foot 
         self.unitTruth = np.zeros([self.mapsizey, self.mapsizex]) == 0
         for go in self.goList:
             if issubclass(go.__class__,Building):
@@ -373,7 +393,7 @@ class Game():
 
         self.accesibleTiles = np.logical_and(self.unitTruth,self.walkableTerrain)
     def treeGeneration(self):
-
+        #generates trees with certain range around so none too close
         self.trees = []
 
         grassArea = (self.terrainMap == 3) | (self.terrainMap == 4)
@@ -415,6 +435,8 @@ class Game():
                 treecount+=1
             i+=1                
     def processRequest(self):
+        
+        ## Processes the requests for each player
         self.updatePlayerInfo()
         requestPlayer1 = player1.playerAction(self.player1)
         requestPlayer2 = player2.playerAction(self.player2)
@@ -545,6 +567,8 @@ class Game():
                     if "health" not in requestPlayer2.gameRequestDict:
                         self.team2.summonUnit(requestPlayer2.gameRequestDict["coordinates"],requestPlayer2.gameRequestDict["type"])
     def runAction(self):
+
+        ##runs the actions for each team alternating
         self.accesibleMapCreation()
         self.unitActionKill(self.trees)
         self.gameOutcome = (self.team1.deathCheck(),self.team2.deathCheck())
@@ -558,6 +582,7 @@ class Game():
             self.unitActionKill(self.team2.units)
             self.unitActionKill(self.team1.units)
     def unitActionKill(self,listToRemove: list):
+        #destroyts units that arent alive
         indextoremove = []
         index = 0
         for units in listToRemove:
@@ -575,6 +600,8 @@ class Game():
             print(indextoremove)
 
     def updateMaps(self):
+
+        ##Updates the maps for the graphics
                 
         self.ressourceMap = np.zeros([self.mapsizey, self.mapsizex])
 
@@ -619,9 +646,13 @@ class Game():
         for building in self.team2.buildings:
             self.team2BuildingMap[building.coordinates[0]-building.rad, building.coordinates[1]-building.rad] = 1
                 
+
+## Team class
 class Team():
 
     def __init__(self,coordinates):
+
+        ##defines base units
 
         self.units = []
 
@@ -638,6 +669,8 @@ class Team():
         self.summoncoords = []
 
     def summonCoordUpdate(self,availablecoords):
+
+        #generates possible summoning coords to the player class to erceive
         
         summonradcoords = set()
         buildingunitcoords = set()
@@ -659,6 +692,8 @@ class Team():
                 self.summoncoords.append([int(coordinates[0]),int(coordinates[1])])
     def summonUnit(self, coords, type):
 
+        #function to call summon a unit
+
         matches = np.all(np.array(self.summoncoords) == np.array(coords), axis=1)
         exists = np.any(matches)
         if exists:
@@ -678,18 +713,20 @@ class Team():
                 self.units.append(GlassCannon(coords,self))
                 self.wood -= 70
     def deathCheck(self):
-
+        #verify if dead
         if self.mainBuilding.health <= 0:
             return 0
         else:
             return 1
         
 
-
+#generates gameobject class
 
 class GameObject(): 
 
     def __init__(self, coordinates):
+
+        #initializes base info
 
         self.possible_actions = set()
 
@@ -746,7 +783,7 @@ class Units(GameObject):
         self.range = 1
         
     def action(self,availableposition):
-
+        #all actions, gather move and attack.
         if type(self.goal) == list and len(self.goal) == 2:
 
             if self.speedcounter == 0:
@@ -842,7 +879,7 @@ class Units(GameObject):
                     else:
                         self.speedcounter+=1
 
-
+#game object classes etc
     
 class UtilityUnits(Units):
 

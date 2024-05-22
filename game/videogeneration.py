@@ -306,7 +306,7 @@ def generateVideo(gameStates,gameID):
     ## Generating video components
 
     ## Time for each zoom
-    zoomlen = 24*8
+    zoomlen = 24*4
 
     ## Area zoom 
     zoomsize = [18,32]
@@ -331,10 +331,11 @@ def generateVideo(gameStates,gameID):
 
     print("Scaling")
 
-    zoomedImages = upscale(zoomedImages,4) 
-    unZoomedImages = upscale(unZoomedImages,2) 
-    minimap = upscale(minimap,2) 
-    minimapframed = upscale(minimapframed,2) 
+    zoomedImages = upscale(zoomedImages,2) 
+    # unZoomedImages = upscale(unZoomedImages,1) 
+    # minimap = upscale(minimap,1) 
+    # minimapframed = upscale(minimapframed,2) 
+
 
     print("Editing")
 
@@ -343,7 +344,7 @@ def generateVideo(gameStates,gameID):
 
     zoomtimers = math.ceil(len(unZoomedImages)/zoomlen)
     while len(zoomlist) < zoomtimers - 1:
-        if random.randint(0, 1) == 1:
+        if random.randint(0, 2) != 0:
             zoomlist.append(True)
             if len(zoomlist) < zoomtimers - 1:
                 zoomlist.append(False)
