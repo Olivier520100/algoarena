@@ -9,4 +9,3 @@ dockerized/.env
 *.pyc
 dockerized/player1.py
 dockerized/player2.py
-*.mp4
